@@ -34,7 +34,7 @@ Funcionalidade 2: Tela de Login
 
 Funcionalidade 3: Tela de Cadastro
 
-- Permitir que o usuário crie uma conta fornecendo o usuario e senha.
+- Permitir que o usuário crie uma conta fornecendo o nome, usuario e senha.
 - Armazenar os dados de login no Firebase.
 
 Funcionalidade 4: Tela de Busca
