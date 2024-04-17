@@ -5,6 +5,7 @@
 - Jonas Mariano de Oliveira Silva
 - Caio Mario do Nascimento Silva
 - Maria Eduarda Vieira da Silva
+- Raphael Alves Magalhães Júnior
 
 ## API
 
