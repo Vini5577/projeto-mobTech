@@ -1,4 +1,4 @@
-# Projeto-MobMovie
+# Projeto-ConnectCine
 
 ## Grupo-MobTech
 - Hugo Vinícius Pessoa de Melo Santos
@@ -35,7 +35,7 @@ Funcionalidade 1: Tela Inicial (Home Screen)
             <img src="./screenshots/HomeScreen/Home_Screen_Series.png" />
         </td>
         <td>
-            <img src="./screenshots/HomeScreen/Favorite_Screen.png" />
+            <img src="./screenshots/HomeScreen/Favorite-Screen.png" />
         </td>
     </tr>
 </table>
@@ -78,7 +78,10 @@ Funcionalidade 4: Tela de Busca
 <table border="0">
     <tr>
         <td>
-            <img src="./screenshots/SearchScreen/Search_Screen.png" />
+            <img src="./screenshots/SearchScreen/Search-Screen-Movie.png" />
+        </td>
+        <td>
+            <img src="./screenshots/SearchScreen/Search-Screen-Serie.png" />
         </td>
     </tr>
 </table>
