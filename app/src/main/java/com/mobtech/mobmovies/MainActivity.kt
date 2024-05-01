@@ -5,6 +5,7 @@ import android.os.Bundle
 
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,30 +20,20 @@ class MainActivity : AppCompatActivity() {
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
 
-        adapter = FragmentPageAdapter(supportFragmentManager, lifecycle)
-
-        tabLayout.addTab(tabLayout.newTab().setText("Filmes"))
-        tabLayout.addTab(tabLayout.newTab().setText("Séries"))
-        tabLayout.addTab(tabLayout.newTab().setText("Favoritos"))
+        adapter = FragmentPageAdapter(this)
 
         viewPager.adapter = adapter
+        viewPager.isUserInputEnabled = false
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab != null) {
-                    viewPager.currentItem = tab.position
-                }
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> "Filmes"
+                1 -> "Séries"
+                2 -> "Favoritos"
+                else -> null
             }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // Not implemented
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // Not implemented
-            }
-        })
+        }.attach()
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
