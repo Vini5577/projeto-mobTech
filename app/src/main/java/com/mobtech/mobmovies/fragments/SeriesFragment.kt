@@ -1,11 +1,28 @@
 package com.mobtech.mobmovies.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.google.android.material.imageview.ShapeableImageView
 import com.mobtech.mobmovies.R
+import com.mobtech.mobmovies.adapter.MovieAdapter
+import com.mobtech.mobmovies.adapter.SerieAdapter
+import com.mobtech.mobmovies.data.MovieResponse
+import com.mobtech.mobmovies.data.SerieResponse
+import com.mobtech.mobmovies.databinding.ActivityMainBinding
+import com.mobtech.mobmovies.service.SerieApiService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,29 +37,115 @@ private const val ARG_PARAM2 = "param2"
 class SeriesFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
+    private lateinit var binding: ActivityMainBinding
+    private val BASE_URL = "https://api.themoviedb.org/3/"
+    private val API_KEY = "92f5a194730faec7789a4c569d9ca999"
+    private val TAG: String = "CHECK_RESPONSE"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_series, container, false)
+        val api = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(SerieApiService::class.java)
+
+        val view = inflater.inflate(R.layout.fragment_series, container, false)
+        val trendingLayout = view.findViewById<LinearLayout>(R.id.trending_layout_serie)
+
+        api.getTrendingSeries("pt-BR", API_KEY).enqueue(object : Callback<SerieResponse>{
+            override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
+                if (response.isSuccessful) {
+                    response.body()?.results?.let { series ->
+                        val adapter = SerieAdapter(series, requireContext())
+                        adapter.bindView(trendingLayout)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<SerieResponse>, t: Throwable) {
+                Log.i(TAG, "onFailure: ${t.message}")
+            }
+        })
+
+        val topRatedSeries = view.findViewById<LinearLayout>(R.id.top_rated_series)
+        api.getTopRatedSeries("pt-BR", API_KEY).enqueue(object : Callback<SerieResponse>{
+            override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
+                if (response.isSuccessful) {
+                    response.body()?.results?.let { series ->
+                        val adapter = SerieAdapter(series, requireContext())
+                        adapter.bindView(topRatedSeries)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<SerieResponse>, t: Throwable) {
+                Log.i(TAG, "onFailure: ${t.message}")
+            }
+        })
+
+        val airingTodayLayout = view.findViewById<LinearLayout>(R.id.airing_today_layout_serie)
+        api.getAiringToday("pt-BR", API_KEY).enqueue(object : Callback<SerieResponse>{
+            override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
+                if (response.isSuccessful) {
+                    response.body()?.results?.let { series ->
+                        val adapter = SerieAdapter(series, requireContext())
+                        adapter.bindView(airingTodayLayout)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<SerieResponse>, t: Throwable) {
+                Log.i(TAG, "onFailure: ${t.message}")
+            }
+        })
+
+        val serieId = (1..1000).random()
+
+        api.getRecommendationsSerie(serieId,"pt-BR", API_KEY).enqueue(object : Callback<SerieResponse>{
+            override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
+                if (response.isSuccessful) {
+                    val recommendations = response.body()?.results
+                    if (recommendations != null && recommendations.isNotEmpty()) {
+                        val randomSerie = recommendations.random()
+
+                        val recomendacaoFilme =
+                            view.findViewById<ShapeableImageView>(R.id.recomendacao_serie)
+                        val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto_serie)
+                        val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao_serie)
+
+                        Glide.with(requireContext())
+                            .load("https://image.tmdb.org/t/p/w500${randomSerie.poster_path}")
+                            .into(recomendacaoFilme)
+
+                        Log.i(TAG, "\n\n\nonResponse: ${randomSerie} \n\n\n\n")
+                        recomendacaoTexto.text = randomSerie.name
+                        recomendacaoAvaliacao.text = "${(randomSerie.vote_average * 10).toInt()}%"
+                    } else {
+                        Log.d(TAG, "Lista de recomendações vazia")
+                    }
+
+
+                }
+            }
+
+            override fun onFailure(call: Call<SerieResponse>, t: Throwable) {
+                Log.i(TAG, "onFailure: ${t.message}")
+            }
+        })
+
+        return view
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SeriesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             SeriesFragment().apply {

@@ -33,9 +33,6 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MovieFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     private lateinit var binding: ActivityMainBinding
     private val BASE_URL = "https://api.themoviedb.org/3/"
@@ -46,10 +43,7 @@ class MovieFragment : Fragment() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     @SuppressLint("MissingInflatedId")
@@ -145,15 +139,18 @@ class MovieFragment : Fragment() {
                         val recomendacaoFilme =
                             view.findViewById<ShapeableImageView>(R.id.recomendacao_filme)
                         val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto)
-
+                        val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao)
 
                         Glide.with(requireContext())
                             .load("https://image.tmdb.org/t/p/w500${randomMovie.poster_path}")
                             .into(recomendacaoFilme)
                         recomendacaoTexto.text = randomMovie.title
+                        recomendacaoAvaliacao.text = "${(randomMovie.vote_average * 10).toInt()}%"
                     } else {
                         Log.d(TAG, "Lista de recomendações vazia")
                     }
+
+
                 }
             }
 
