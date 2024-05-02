@@ -1,16 +1,20 @@
 package com.mobtech.mobmovies.fragments
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.mobtech.mobmovies.R
+import com.mobtech.mobmovies.SearchActivity
 import com.mobtech.mobmovies.adapter.MovieAdapter
 import com.mobtech.mobmovies.adapter.SerieAdapter
 import com.mobtech.mobmovies.data.MovieResponse
@@ -141,6 +145,29 @@ class SeriesFragment : Fragment() {
                 Log.i(TAG, "onFailure: ${t.message}")
             }
         })
+
+        val inputText: EditText = view.findViewById(R.id.busca_serie)
+
+        val listener = View.OnClickListener {
+            if (inputText.text.isBlank()) {
+                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                alertDialogBuilder.setTitle("Atenção")
+                alertDialogBuilder.setMessage("O campo de busca está vazio. Por favor, insira um termo de busca.")
+                alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                val alertDialog = alertDialogBuilder.create()
+                alertDialog.show()
+            } else {
+                val intent = Intent(requireContext(), SearchActivity::class.java)
+                val bundle = Bundle()
+                bundle.putInt("fragmentIndex", 1)
+                intent.putExtras(bundle)
+                startActivity(intent)
+            }
+        }
+
+        inputText.setOnClickListener(listener)
 
         return view
     }

@@ -13,21 +13,21 @@
                 android:layout_marginTop="9dp">
 
 
-                    <EditText
-                        android:id="@+id/busca_filme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:background="@drawable/rounded_plain_text"
-                        android:inputType="text"
-                        android:layout_marginHorizontal="24dp"
-                        android:paddingVertical="16dp"
-                        android:drawableLeft="@drawable/search"
-                        android:drawablePadding="20dp"
-                        android:paddingLeft="16dp"
-                        android:textColorHint="#BBBBBB"
-                        android:hint="Busque Filmes"
-                        />
+                <EditText
+                    android:id="@+id/busca_favoritos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:background="@drawable/rounded_plain_text"
+                    android:inputType="text"
+                    android:layout_marginHorizontal="24dp"
+                    android:paddingVertical="16dp"
+                    android:drawableLeft="@drawable/search"
+                    android:drawablePadding="20dp"
+                    android:paddingLeft="16dp"
+                    android:textColorHint="#BBBBBB"
+                    android:hint="Busque Filmes"
+                    />
 
                 <GridLayout
                     android:layout_width="match_parent"

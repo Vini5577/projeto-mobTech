@@ -1,6 +1,7 @@
 package com.mobtech.mobmovies.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -165,15 +166,25 @@ class MovieFragment : Fragment() {
 
         val inputText: EditText = view.findViewById(R.id.busca_filme)
 
-        inputText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+        val listener = View.OnClickListener {
+            if (inputText.text.isBlank()) {
+                // Se o texto estiver vazio, exibir um diálogo
+                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                alertDialogBuilder.setTitle("Atenção")
+                alertDialogBuilder.setMessage("O campo de busca está vazio. Por favor, insira um termo de busca.")
+                alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                val alertDialog = alertDialogBuilder.create()
+                alertDialog.show()
+            } else {
+                // Se o texto não estiver vazio, iniciar a SearchActivity
                 val intent = Intent(requireContext(), SearchActivity::class.java)
                 startActivity(intent)
-                true
-            } else {
-                false
             }
         }
+
+        inputText.setOnClickListener(listener)
 
 
         return view
