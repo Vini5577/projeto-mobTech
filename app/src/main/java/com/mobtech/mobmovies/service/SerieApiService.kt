@@ -34,4 +34,11 @@ interface SerieApiService {
         @Query("language") language: String,
         @Query("api_key") apiKey: String
     ): Call<SerieResponse>
+
+    @GET("search/tv")
+    fun searchSerie(
+        @Query("query") query: String,
+        @Query("language") language: String,
+        @Query("api_key") apiKey: String
+    ): Call<SerieResponse>
 }

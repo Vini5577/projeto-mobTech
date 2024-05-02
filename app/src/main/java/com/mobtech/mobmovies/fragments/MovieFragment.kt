@@ -178,8 +178,8 @@ class MovieFragment : Fragment() {
                 val alertDialog = alertDialogBuilder.create()
                 alertDialog.show()
             } else {
-                // Se o texto não estiver vazio, iniciar a SearchActivity
                 val intent = Intent(requireContext(), SearchActivity::class.java)
+                intent.putExtra("search_query_filmes", inputText.text.toString())
                 startActivity(intent)
             }
         }

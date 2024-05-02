@@ -163,6 +163,7 @@ class SeriesFragment : Fragment() {
                 val bundle = Bundle()
                 bundle.putInt("fragmentIndex", 1)
                 intent.putExtras(bundle)
+                intent.putExtra("search_query_series", inputText.text.toString())
                 startActivity(intent)
             }
         }

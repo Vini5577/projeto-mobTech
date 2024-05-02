@@ -2,6 +2,7 @@ package com.mobtech.mobmovies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -45,6 +46,11 @@ class SearchActivity : AppCompatActivity() {
         val tabIndex = intent.getIntExtra("fragmentIndex", 0)
 
         tabLayout.getTabAt(tabIndex)?.select()
+
+        val imageView: ImageView = findViewById(R.id.imageView)
+        imageView.setOnClickListener {
+            finish()
+        }
 
     }
 }
