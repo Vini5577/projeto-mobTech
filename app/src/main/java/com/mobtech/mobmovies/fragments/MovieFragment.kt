@@ -1,18 +1,22 @@
 package com.mobtech.mobmovies.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.mobtech.mobmovies.data.MovieResponse
 import com.mobtech.mobmovies.R
+import com.mobtech.mobmovies.SearchActivity
 import com.mobtech.mobmovies.adapter.MovieAdapter
 import com.mobtech.mobmovies.databinding.ActivityMainBinding
 import com.mobtech.mobmovies.service.MovieApiService
@@ -158,6 +162,18 @@ class MovieFragment : Fragment() {
                 Log.i(TAG, "onFailure: ${t.message}")
             }
         })
+
+        val inputText: EditText = view.findViewById(R.id.busca_filme)
+
+        inputText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val intent = Intent(requireContext(), SearchActivity::class.java)
+                startActivity(intent)
+                true
+            } else {
+                false
+            }
+        }
 
 
         return view

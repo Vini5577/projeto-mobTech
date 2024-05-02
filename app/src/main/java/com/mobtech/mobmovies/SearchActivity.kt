@@ -2,33 +2,29 @@ package com.mobtech.mobmovies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MainActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity() {
 
     private lateinit var tabLayout: TabLayout
-    private lateinit var viewPager: ViewPager2
-    private lateinit var adapter: FragmentPageAdapter
+    private lateinit var viewPager2: ViewPager2
+    private lateinit var adapter: FragmentSearchAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        setContentView(R.layout.activity_search)
 
         tabLayout = findViewById(R.id.tabLayout)
-        viewPager = findViewById(R.id.viewPager)
+        viewPager2 = findViewById(R.id.viewPager2)
 
-        adapter = FragmentPageAdapter(this)
+        adapter = FragmentSearchAdapter(this)
 
-        viewPager.adapter = adapter
-        viewPager.isUserInputEnabled = false
+        viewPager2.adapter = adapter
+        viewPager2.isUserInputEnabled = false
 
-
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = when (position) {
+        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+            tab.text = when(position) {
                 0 -> "Filmes"
                 1 -> "Séries"
                 2 -> "Favoritos"
@@ -36,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             }
         }.attach()
 
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        viewPager2.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 tabLayout.selectTab(tabLayout.getTabAt(position))
