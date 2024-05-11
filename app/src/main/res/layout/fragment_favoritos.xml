@@ -1,17 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.FavoritosFragment">
+    android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="start"
+                android:layout_marginTop="9dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragmento de Favoritos"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="22sp"/>
 
-</FrameLayout>
+                <EditText
+                    android:id="@+id/busca_favoritos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:background="@drawable/rounded_plain_text"
+                    android:inputType="text"
+                    android:layout_marginHorizontal="24dp"
+                    android:paddingVertical="16dp"
+                    android:drawableLeft="@drawable/search"
+                    android:drawablePadding="20dp"
+                    android:paddingLeft="16dp"
+                    android:textColorHint="#BBBBBB"
+                    android:hint="Busque Filmes/Series Favoritos"
+                    />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10sp"
+                    android:columnCount="2">
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            xmlns:tools="http://schemas.android.com/tools"
+                            android:layout_width="wrap_content"
+                            android:layout_height="250sp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginBottom="30sp">
+
+                            <FrameLayout
+                                android:layout_width="154sp"
+                                android:layout_height="184sp"
+                                android:layout_marginRight="10sp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/image_post"
+                                    android:layout_width="154sp"
+                                    android:layout_height="184sp"
+                                    app:shapeAppearanceOverlay="@style/roundedimageview"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/poster"/>
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/gradientimgmovieview" />
+
+                                <LinearLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_marginLeft="103sp"
+                                    android:layout_marginTop="4sp"
+                                    android:background="@drawable/border"
+                                    android:gravity="center"
+                                    >
+
+                                    <TextView
+                                        android:id="@+id/avalicao_item"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentBottom="true"
+                                        android:text="90%"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="16dp" />
+                                </LinearLayout>
+
+                            </FrameLayout>
+
+
+                            <TextView
+                                android:id="@+id/title_template"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/white"
+                                android:text="Homem-Aranha Atraves do aranhaverso"
+                                android:layout_marginTop="5sp"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            xmlns:tools="http://schemas.android.com/tools"
+                            android:layout_width="wrap_content"
+                            android:layout_height="250sp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginBottom="30sp">
+
+                            <FrameLayout
+                                android:layout_width="154sp"
+                                android:layout_height="184sp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/image_post1"
+                                    android:layout_width="154sp"
+                                    android:layout_height="184sp"
+                                    app:shapeAppearanceOverlay="@style/roundedimageview"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/poster"/>
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/gradientimgmovieview" />
+
+                                <LinearLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_marginLeft="103sp"
+                                    android:layout_marginTop="4sp"
+                                    android:background="@drawable/border"
+                                    android:gravity="center"
+                                    >
+
+                                    <TextView
+                                        android:id="@+id/avalicao_item1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentBottom="true"
+                                        android:text="90%"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="16dp" />
+                                </LinearLayout>
+
+                            </FrameLayout>
+
+
+                            <TextView
+                                android:id="@+id/title_template1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/white"
+                                android:text="Homem-Aranha Atraves do aranhaverso"
+                                android:layout_marginTop="5sp"
+                                />
+
+                        </LinearLayout>
+
+                </GridLayout>
+            </LinearLayout>
+</ScrollView>

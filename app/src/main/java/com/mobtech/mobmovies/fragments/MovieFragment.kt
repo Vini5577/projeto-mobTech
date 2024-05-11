@@ -1,20 +1,26 @@
 package com.mobtech.mobmovies.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.mobtech.mobmovies.data.MovieResponse
 import com.mobtech.mobmovies.R
+import com.mobtech.mobmovies.SearchActivity
 import com.mobtech.mobmovies.adapter.MovieAdapter
 import com.mobtech.mobmovies.databinding.ActivityMainBinding
+import com.mobtech.mobmovies.databinding.FragmentMovieBinding
 import com.mobtech.mobmovies.service.MovieApiService
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,15 +40,15 @@ private const val ARG_PARAM2 = "param2"
  */
 class MovieFragment : Fragment() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: FragmentMovieBinding
     private val BASE_URL = "https://api.themoviedb.org/3/"
     private val API_KEY = "92f5a194730faec7789a4c569d9ca999"
     private val TAG: String = "CHECK_RESPONSE"
+    private lateinit var api: MovieApiService
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
 
     }
 
@@ -52,13 +58,15 @@ class MovieFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val api = Retrofit.Builder()
+        api = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MovieApiService::class.java)
 
-        val view = inflater.inflate(R.layout.fragment_movie, container, false)
+        binding = FragmentMovieBinding.inflate(layoutInflater)
+        val view = binding.root
+
         val trendingLayout = view.findViewById<LinearLayout>(R.id.trending_layout)
 
         api.getTrendingMovies("pt-BR", API_KEY).enqueue(object : Callback<MovieResponse>{
@@ -127,6 +135,37 @@ class MovieFragment : Fragment() {
             }
         })
 
+        loadRecommendations()
+
+        val inputText: EditText = view.findViewById(R.id.busca_filme)
+
+        val listener = View.OnClickListener {
+            if (inputText.text.isBlank()) {
+                // Se o texto estiver vazio, exibir um diálogo
+                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                alertDialogBuilder.setTitle("Atenção")
+                alertDialogBuilder.setMessage("O campo de busca está vazio. Por favor, insira um termo de busca.")
+                alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                val alertDialog = alertDialogBuilder.create()
+                alertDialog.show()
+            } else {
+                val intent = Intent(requireContext(), SearchActivity::class.java)
+                intent.putExtra("search_query_filmes", inputText.text.toString())
+                startActivity(intent)
+            }
+        }
+
+        inputText.setOnClickListener(listener)
+
+
+        return view
+    }
+
+    private fun loadRecommendations() {
+        val view = binding.root
+
         val movieId = (1..1000).random()
 
         api.getRecommendationsMovie(movieId,"pt-BR", API_KEY).enqueue(object : Callback<MovieResponse>{
@@ -144,13 +183,13 @@ class MovieFragment : Fragment() {
                         Glide.with(requireContext())
                             .load("https://image.tmdb.org/t/p/w500${randomMovie.poster_path}")
                             .into(recomendacaoFilme)
+
                         recomendacaoTexto.text = randomMovie.title
                         recomendacaoAvaliacao.text = "${(randomMovie.vote_average * 10).toInt()}%"
                     } else {
-                        Log.d(TAG, "Lista de recomendações vazia")
+                        Log.d(TAG, "Lista de recomendações vazia, fazendo nova requisição")
+                        loadRecommendations()
                     }
-
-
                 }
             }
 
@@ -158,10 +197,8 @@ class MovieFragment : Fragment() {
                 Log.i(TAG, "onFailure: ${t.message}")
             }
         })
-
-
-        return view
     }
+
 
 
     companion object {
