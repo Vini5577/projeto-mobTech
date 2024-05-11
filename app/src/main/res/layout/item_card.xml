@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:layout_marginLeft="20dp">
+
+    <FrameLayout
+        android:layout_width="224.21sp"
+        android:layout_height="318sp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_post"
+            android:layout_width="224.21sp"
+            android:layout_height="318sp"
+            app:shapeAppearanceOverlay="@style/roundedimageview"
+            android:scaleType="centerCrop" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradientimgmovieview" />
+
+        <LinearLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:layout_marginLeft="166dp"
+            android:layout_marginRight="8.48dp"
+            android:layout_marginTop="6.2dp">
+
+            <TextView
+                android:id="@+id/avalicao_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:text="90%"
+                android:textColor="@android:color/white"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/title_template"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        />
+
+</LinearLayout>
