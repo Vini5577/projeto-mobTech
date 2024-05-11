@@ -11,6 +11,7 @@ import android.widget.EditText
 import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.SearchActivity
 import com.mobtech.mobmovies.databinding.ActivityMainBinding
+import com.mobtech.mobmovies.databinding.FragmentFavoritosBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,25 +25,18 @@ private const val ARG_PARAM2 = "param2"
  */
 class FavoritosFragment : Fragment() {
 
-    private lateinit var binding: ActivityMainBinding
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding: FragmentFavoritosBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val view = inflater.inflate(R.layout.fragment_favoritos, container, false)
+        binding = FragmentFavoritosBinding.inflate(layoutInflater);
+        val view = binding.root
 
         val inputText: EditText = view.findViewById(R.id.busca_favoritos)
 
@@ -61,13 +55,14 @@ class FavoritosFragment : Fragment() {
                 val bundle = Bundle()
                 bundle.putInt("fragmentIndex", 2)
                 intent.putExtras(bundle)
+                intent.putExtra("search_query_favoritos", inputText.text.toString())
                 startActivity(intent)
             }
         }
 
         inputText.setOnClickListener(listener)
 
-        return inflater.inflate(R.layout.fragment_favoritos, container, false)
+        return view;
     }
     companion object {
         /**

@@ -20,6 +20,9 @@ import com.mobtech.mobmovies.adapter.SerieAdapter
 import com.mobtech.mobmovies.data.MovieResponse
 import com.mobtech.mobmovies.data.SerieResponse
 import com.mobtech.mobmovies.databinding.ActivityMainBinding
+import com.mobtech.mobmovies.databinding.FragmentFavoritosBinding
+import com.mobtech.mobmovies.databinding.FragmentSeriesBinding
+import com.mobtech.mobmovies.service.MovieApiService
 import com.mobtech.mobmovies.service.SerieApiService
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,28 +44,31 @@ private const val ARG_PARAM2 = "param2"
 class SeriesFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: FragmentSeriesBinding
     private val BASE_URL = "https://api.themoviedb.org/3/"
     private val API_KEY = "92f5a194730faec7789a4c569d9ca999"
     private val TAG: String = "CHECK_RESPONSE"
+    private lateinit var api: SerieApiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val api = Retrofit.Builder()
+       api = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(SerieApiService::class.java)
 
-        val view = inflater.inflate(R.layout.fragment_series, container, false)
+        binding = FragmentSeriesBinding.inflate(layoutInflater);
+        val view = binding.root
+
+
+       // val view = inflater.inflate(R.layout.fragment_series, container, false)
         val trendingLayout = view.findViewById<LinearLayout>(R.id.trending_layout_serie)
 
         api.getTrendingSeries("pt-BR", API_KEY).enqueue(object : Callback<SerieResponse>{
@@ -112,39 +118,7 @@ class SeriesFragment : Fragment() {
             }
         })
 
-        val serieId = (1..1000).random()
-
-        api.getRecommendationsSerie(serieId,"pt-BR", API_KEY).enqueue(object : Callback<SerieResponse>{
-            override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
-                if (response.isSuccessful) {
-                    val recommendations = response.body()?.results
-                    if (recommendations != null && recommendations.isNotEmpty()) {
-                        val randomSerie = recommendations.random()
-
-                        val recomendacaoFilme =
-                            view.findViewById<ShapeableImageView>(R.id.recomendacao_serie)
-                        val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto_serie)
-                        val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao_serie)
-
-                        Glide.with(requireContext())
-                            .load("https://image.tmdb.org/t/p/w500${randomSerie.poster_path}")
-                            .into(recomendacaoFilme)
-
-                        Log.i(TAG, "\n\n\nonResponse: ${randomSerie} \n\n\n\n")
-                        recomendacaoTexto.text = randomSerie.name
-                        recomendacaoAvaliacao.text = "${(randomSerie.vote_average * 10).toInt()}%"
-                    } else {
-                        Log.d(TAG, "Lista de recomendações vazia")
-                    }
-
-
-                }
-            }
-
-            override fun onFailure(call: Call<SerieResponse>, t: Throwable) {
-                Log.i(TAG, "onFailure: ${t.message}")
-            }
-        })
+        loadRecommendations();
 
         val inputText: EditText = view.findViewById(R.id.busca_serie)
 
@@ -171,6 +145,43 @@ class SeriesFragment : Fragment() {
         inputText.setOnClickListener(listener)
 
         return view
+    }
+
+    private fun loadRecommendations() {
+        val view = binding.root
+
+        val serieId = (1..1000).random()
+
+        api.getRecommendationsSerie(serieId,"pt-BR", API_KEY).enqueue(object : Callback<SerieResponse>{
+            override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
+                if (response.isSuccessful) {
+                    val recommendations = response.body()?.results
+                    if (recommendations != null && recommendations.isNotEmpty()) {
+                        val randomSerie = recommendations.random()
+
+                        val recomendacaoFilme =
+                            view.findViewById<ShapeableImageView>(R.id.recomendacao_serie)
+                        val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto_serie)
+                        val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao_serie)
+
+                        Glide.with(requireContext())
+                            .load("https://image.tmdb.org/t/p/w500${randomSerie.poster_path}")
+                            .into(recomendacaoFilme)
+
+                        recomendacaoTexto.text = randomSerie.name
+                        recomendacaoAvaliacao.text = "${(randomSerie.vote_average * 10).toInt()}%"
+                    } else {
+                        Log.d(TAG, "Lista de recomendações vazia")
+                    }
+
+
+                }
+            }
+
+            override fun onFailure(call: Call<SerieResponse>, t: Throwable) {
+                Log.i(TAG, "onFailure: ${t.message}")
+            }
+        })
     }
 
     companion object {

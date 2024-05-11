@@ -20,6 +20,7 @@ import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.SearchActivity
 import com.mobtech.mobmovies.adapter.MovieAdapter
 import com.mobtech.mobmovies.databinding.ActivityMainBinding
+import com.mobtech.mobmovies.databinding.FragmentMovieBinding
 import com.mobtech.mobmovies.service.MovieApiService
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,15 +40,15 @@ private const val ARG_PARAM2 = "param2"
  */
 class MovieFragment : Fragment() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: FragmentMovieBinding
     private val BASE_URL = "https://api.themoviedb.org/3/"
     private val API_KEY = "92f5a194730faec7789a4c569d9ca999"
     private val TAG: String = "CHECK_RESPONSE"
+    private lateinit var api: MovieApiService
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
 
     }
 
@@ -57,13 +58,15 @@ class MovieFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val api = Retrofit.Builder()
+        api = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MovieApiService::class.java)
 
-        val view = inflater.inflate(R.layout.fragment_movie, container, false)
+        binding = FragmentMovieBinding.inflate(layoutInflater)
+        val view = binding.root
+
         val trendingLayout = view.findViewById<LinearLayout>(R.id.trending_layout)
 
         api.getTrendingMovies("pt-BR", API_KEY).enqueue(object : Callback<MovieResponse>{
@@ -132,37 +135,7 @@ class MovieFragment : Fragment() {
             }
         })
 
-        val movieId = (1..1000).random()
-
-        api.getRecommendationsMovie(movieId,"pt-BR", API_KEY).enqueue(object : Callback<MovieResponse>{
-            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                if (response.isSuccessful) {
-                    val recommendations = response.body()?.results
-                    if (recommendations != null && recommendations.isNotEmpty()) {
-                        val randomMovie = recommendations.random()
-
-                        val recomendacaoFilme =
-                            view.findViewById<ShapeableImageView>(R.id.recomendacao_filme)
-                        val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto)
-                        val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao)
-
-                        Glide.with(requireContext())
-                            .load("https://image.tmdb.org/t/p/w500${randomMovie.poster_path}")
-                            .into(recomendacaoFilme)
-                        recomendacaoTexto.text = randomMovie.title
-                        recomendacaoAvaliacao.text = "${(randomMovie.vote_average * 10).toInt()}%"
-                    } else {
-                        Log.d(TAG, "Lista de recomendações vazia")
-                    }
-
-
-                }
-            }
-
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                Log.i(TAG, "onFailure: ${t.message}")
-            }
-        })
+        loadRecommendations()
 
         val inputText: EditText = view.findViewById(R.id.busca_filme)
 
@@ -189,6 +162,43 @@ class MovieFragment : Fragment() {
 
         return view
     }
+
+    private fun loadRecommendations() {
+        val view = binding.root
+
+        val movieId = (1..1000).random()
+
+        api.getRecommendationsMovie(movieId,"pt-BR", API_KEY).enqueue(object : Callback<MovieResponse>{
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                if (response.isSuccessful) {
+                    val recommendations = response.body()?.results
+                    if (recommendations != null && recommendations.isNotEmpty()) {
+                        val randomMovie = recommendations.random()
+
+                        val recomendacaoFilme =
+                            view.findViewById<ShapeableImageView>(R.id.recomendacao_filme)
+                        val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto)
+                        val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao)
+
+                        Glide.with(requireContext())
+                            .load("https://image.tmdb.org/t/p/w500${randomMovie.poster_path}")
+                            .into(recomendacaoFilme)
+
+                        recomendacaoTexto.text = randomMovie.title
+                        recomendacaoAvaliacao.text = "${(randomMovie.vote_average * 10).toInt()}%"
+                    } else {
+                        Log.d(TAG, "Lista de recomendações vazia, fazendo nova requisição")
+                        loadRecommendations()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                Log.i(TAG, "onFailure: ${t.message}")
+            }
+        })
+    }
+
 
 
     companion object {

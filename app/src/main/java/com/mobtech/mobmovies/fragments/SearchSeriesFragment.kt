@@ -17,6 +17,7 @@ import com.mobtech.mobmovies.data.MovieResponse
 import com.mobtech.mobmovies.data.SerieResponse
 import com.mobtech.mobmovies.databinding.ActivityMainBinding
 import com.mobtech.mobmovies.databinding.ActivitySearchBinding
+import com.mobtech.mobmovies.databinding.FragmentSearchSeriesBinding
 import com.mobtech.mobmovies.service.MovieApiService
 import com.mobtech.mobmovies.service.SerieApiService
 import retrofit2.Call
@@ -32,22 +33,22 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class SearchSeriesFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private lateinit var binding: ActivitySearchBinding
+    private lateinit var binding: FragmentSearchSeriesBinding
     private val BASE_URL = "https://api.themoviedb.org/3/"
     private val API_KEY = "92f5a194730faec7789a4c569d9ca999"
     private val TAG: String = "CHECK_RESPONSE"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        val view = binding.root
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_search_series, container, false)
+
+        binding = FragmentSearchSeriesBinding.inflate(layoutInflater)
+        val view = binding.root
 
         val searchLayout = view.findViewById<GridLayout>(R.id.layout_results)
 
