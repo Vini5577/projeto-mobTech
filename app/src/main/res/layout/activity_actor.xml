@@ -9,27 +9,318 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginLeft="15dp"
+            android:layout_marginTop="16dp"
             android:gravity="start"
             android:src="@drawable/back_button" />
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            >
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/image_actor1"
+                android:layout_width="253dp"
+                android:layout_height="253dp"
+                android:scaleType="center"
+                android:src="@drawable/view_actor"
+                app:shapeAppearanceOverlay="@style/roundedimageactor"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/white"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Mark Hamill"
+                android:gravity="center"
+                android:textSize="24dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Oakland, California, USA"
+                android:textColor="#BCBCBC"
+                android:textSize="15dp"
+                tools:ignore="ExtraText,TextSizeCheck" />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#515151"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="24dp"
+            />
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="2"
+            android:rowCount="2"
+            android:padding="16dp"
+            android:orientation="horizontal">
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="65dp"
-                android:layout_marginRight="65dp"
-                android:gravity="center"
-                android:src="@drawable/view_actor"
-                android:style="@style/roundedimageActor"/>
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp">
+                <TextView
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:textSize="16dp"
+                    android:text="Gênero" />
+
+                <!-- Primeira linha, segunda coluna -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="1"
+                    android:text="Masculino"
+                    android:textColor="#BCBCBC"
+                    android:textSize="14dp"
+                    tools:ignore="TextSizeCheck" />
+
+                <!-- Segunda linha, primeira coluna -->
+                <TextView
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="0"
+                    android:textSize="16dp"
+                    android:text="Nascimento"
+                    android:layout_marginTop="16dp"/>
+
+                <!-- Segunda linha, primeira coluna -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="0"
+                    android:text="25 de setembro de 1951"
+                    android:textColor="#BCBCBC"
+                    android:textSize="14dp"
+                    tools:ignore="TextSizeCheck" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="60dp">
+                <TextView
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:text="Conhecido Por" />
+
+                <!-- Primeira linha, segunda coluna -->
+                <TextView
+                    android:textColor="#BCBCBC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="1"
+                    android:text="Atuação" />
+
+            </LinearLayout>
+        </GridLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#515151"
+            android:layout_marginHorizontal="24dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="12dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:text="Biografia"
+                android:textSize="16dp"
+                android:layout_marginLeft="24dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="24dp"
+                android:text="Mark Richard Hamill é um ator, dublador e escritor norte-americano conhecido por interpretar Luke Skywalker na saga de ficção científica Star Wars e por dar voz ao Joker em Batman: The Animated Series e na série de videojogos Batman: Arkham, além de vários outros personagens em outros desenhos."
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                tools:ignore="TextSizeCheck" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:layout_marginTop="12dp"
+                android:text="Filmes"
+                android:textSize="16dp"
+                android:layout_marginLeft="24dp"
+                />
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none"
+                android:fadeScrollbars="false">
+
+                <LinearLayout
+                    android:id="@+id/trending_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    android:contentDescription="caixa filme"
+                    android:layout_marginLeft="24dp">
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <FrameLayout
+                        android:layout_width="142sp"
+                        android:layout_height="106sp">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/image_actor"
+                            android:layout_width="142sp"
+                            android:layout_height="106sp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/poster2"
+                            app:shapeAppearanceOverlay="@style/roundedimageview"
+                            />
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/gradientimgmovieview"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/border"
+                            android:gravity="center"
+                            android:layout_marginLeft="100dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginTop="6dp">
+
+                            <TextView
+                                android:id="@+id/avalicao_item1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:text="90%"
+                                android:textColor="@android:color/white"
+                                android:textSize="12dp"
+                                tools:ignore="TextSizeCheck" />
+                        </LinearLayout>
+                    </FrameLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Star Wars: A Ascensão de Skywalker (2019)"
+                            android:textColor="@color/white"
+                            android:textSize="12dp"
+                            tools:ignore="TextSizeCheck" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="16dp">
+                        <FrameLayout
+                            android:layout_width="142sp"
+                            android:layout_height="106sp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/image_post"
+                                android:layout_width="142sp"
+                                android:layout_height="106sp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/poster2"
+                                app:shapeAppearanceOverlay="@style/roundedimageview"
+                                />
+
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/gradientimgmovieview"
+                                />
+
+                            <LinearLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/border"
+                                android:gravity="center"
+                                android:layout_marginLeft="100dp"
+                                android:layout_marginRight="7dp"
+                                android:layout_marginTop="6dp">
+
+                                <TextView
+                                    android:id="@+id/avalicao_item"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:text="90%"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="12dp"
+                                    tools:ignore="TextSizeCheck" />
+                            </LinearLayout>
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Star Wars: A Ascensão de Skywalker (2019)"
+                            android:textColor="@color/white"
+                            android:textSize="12dp"
+                            tools:ignore="TextSizeCheck" />
+                    </LinearLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

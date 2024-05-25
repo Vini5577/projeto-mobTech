@@ -5,9 +5,9 @@
         <item name="cornerSize">30dp</item>
     </style>
 
-    <style name="roundedimageActor" parent="">
+    <style name="roundedimageactor" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">150dp</item>
+        <item name="cornerSize">50%</item>
     </style>
 
     <style name="roundedrecomedation" parent="">
