@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mobtech.mobmovies.databinding.ActivityMainBinding
 import com.mobtech.mobmovies.databinding.ActivitySignUpBinding
 import com.mobtech.mobmovies.databinding.FragmentMovieBinding
@@ -21,14 +23,15 @@ import kotlin.math.log
 
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var editTextUserName : TextInputEditText
-    private lateinit var editTextPassword : TextInputEditText
-    private lateinit var editTextPasswordRepeat : TextInputEditText
-    private lateinit var editTextEmailRepeat : TextInputEditText
-    private lateinit var editTextEmail : TextInputEditText
+    private lateinit var editTextUserName : EditText
+    private lateinit var editTextPassword : EditText
+    private lateinit var editTextPasswordRepeat : EditText
+    private lateinit var editTextEmailRepeat : EditText
+    private lateinit var editTextEmail : EditText
     private lateinit var btnSignUp : Button
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     private lateinit var binding: ActivitySignUpBinding
 
@@ -45,6 +48,7 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         auth = FirebaseAuth.getInstance()
+        firestore =FirebaseFirestore.getInstance()
         setContentView(binding.root)
 
 
@@ -77,10 +81,32 @@ class SignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            createAccount(email, password, username)
+            checkIfUserExists(email, password, username)
 
         })
 
+    }
+
+    private fun checkIfUserExists(email: String, password: String, username: String) {
+        firestore.collection("users")
+            .whereEqualTo("username", username)
+            .whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    createAccount(email, password, username)
+                } else {
+                    Toast.makeText(this,
+                        "Usuario ou e-mail já registrado.",
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this,
+                    "Falha ao verificar email: ${e.message}",
+                    Toast.LENGTH_SHORT).show()
+                Log.e("SignUpActivity", "Erro ao verificar email no Firestore", e)
+            }
     }
 
     private fun createAccount(email: String, password: String, username: String) {
@@ -88,23 +114,28 @@ class SignUpActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    val profileUpdates = UserProfileChangeRequest.Builder()
-                        .setDisplayName(username)
-                        .build()
+                    user?.let {
+                        val userMap = hashMapOf(
+                            "uid" to it.uid,
+                            "username" to username,
+                            "email" to email
+                        )
 
-                    user?.updateProfile(profileUpdates)
-                        ?.addOnCompleteListener { profileUpdateTask ->
-                            if (profileUpdateTask.isSuccessful) {
+                        firestore.collection("users").document(it.uid).set(userMap)
+                            .addOnSuccessListener {
                                 Toast.makeText(this, "Usuário criado com sucesso!", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(applicationContext, MainActivity::class.java);
+                                val intent = Intent(applicationContext, MainActivity::class.java)
                                 startActivity(intent)
                                 finish()
-                            } else {
-                                Toast.makeText(this, "Falha ao adicionar username ao perfil do usuário", Toast.LENGTH_SHORT).show()
                             }
-                        }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Falha ao adicionar usuário no Firestore: ${e.message}", Toast.LENGTH_SHORT).show()
+                                Log.e("SignUpActivity", "Erro ao adicionar usuário no Firestore", e)
+                            }
+                    }
                 } else {
                     Toast.makeText(this, "Falha ao criar usuário: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("SignUpActivity", "Erro ao criar usuário", task.exception)
                 }
             }
     }

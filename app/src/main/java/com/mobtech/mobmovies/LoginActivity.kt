@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -24,11 +25,11 @@ class LoginActivity() : AppCompatActivity() {
     private lateinit var editTextPassword : EditText
     private lateinit var btnSignup: Button
     private lateinit var btnLogin: Button
+    private lateinit var forgotPassword: TextView
 
     private lateinit var auth: FirebaseAuth
 
     private lateinit var binding: ActivityLoginBinding
-
 
     override fun onStart() {
         super.onStart()
@@ -52,6 +53,7 @@ class LoginActivity() : AppCompatActivity() {
         editTextPassword = binding.password
         btnLogin = binding.btnLogin
 
+        forgotPassword = binding.passwordForgot
 
         btnSignup.setOnClickListener({
             val signUpScreen = Intent(this, SignUpActivity::class.java)
@@ -78,12 +80,17 @@ class LoginActivity() : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             baseContext,
-                            "Authentication failed.",
+                            "E-mail ou senha está incorreto",
                             Toast.LENGTH_SHORT,
                         ).show()
 
                     }
                 }
+        })
+
+        forgotPassword.setOnClickListener({
+            val intent = Intent(applicationContext, PasswordRecoveryActivity::class.java)
+            startActivity(intent)
         })
     }
 }
