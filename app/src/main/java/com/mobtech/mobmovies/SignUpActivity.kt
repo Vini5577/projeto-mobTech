@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var editTextEmailRepeat : EditText
     private lateinit var editTextEmail : EditText
     private lateinit var btnSignUp : Button
+    private lateinit var backButton: ImageView
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
@@ -85,6 +87,14 @@ class SignUpActivity : AppCompatActivity() {
 
         })
 
+        backButton = binding.backButton
+
+        backButton.setOnClickListener({
+            val intent = Intent(applicationContext, LoginActivity::class.java);
+            startActivity(intent)
+            finish()
+        })
+
     }
 
     private fun checkIfUserExists(email: String, password: String, username: String) {
@@ -138,5 +148,7 @@ class SignUpActivity : AppCompatActivity() {
                     Log.e("SignUpActivity", "Erro ao criar usuário", task.exception)
                 }
             }
+
     }
+
 }

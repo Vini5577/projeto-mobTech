@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -26,6 +27,7 @@ class LoginActivity() : AppCompatActivity() {
     private lateinit var btnSignup: Button
     private lateinit var btnLogin: Button
     private lateinit var forgotPassword: TextView
+    private lateinit var backButton: ImageView
 
     private lateinit var auth: FirebaseAuth
 
@@ -43,7 +45,6 @@ class LoginActivity() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         auth = FirebaseAuth.getInstance()
         setContentView(binding.root)
@@ -91,6 +92,14 @@ class LoginActivity() : AppCompatActivity() {
         forgotPassword.setOnClickListener({
             val intent = Intent(applicationContext, PasswordRecoveryActivity::class.java)
             startActivity(intent)
+        })
+
+        backButton = binding.backButton
+
+        backButton.setOnClickListener({
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         })
     }
 }

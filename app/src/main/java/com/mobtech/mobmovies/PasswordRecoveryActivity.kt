@@ -1,9 +1,11 @@
 package com.mobtech.mobmovies
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +21,7 @@ class PasswordRecoveryActivity : AppCompatActivity() {
     lateinit var email: EditText;
     lateinit var username: EditText;
     lateinit var button: Button;
+    private lateinit var backButton: ImageView
 
     lateinit var auth: FirebaseAuth
     lateinit var firestore: FirebaseFirestore
@@ -26,7 +29,6 @@ class PasswordRecoveryActivity : AppCompatActivity() {
     lateinit var binding: ActivityPasswordRecoveryBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityPasswordRecoveryBinding.inflate(layoutInflater)
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
@@ -47,7 +49,14 @@ class PasswordRecoveryActivity : AppCompatActivity() {
             }
 
             validateUsernamAndEmail(usernameText, emailText)
+        })
 
+        backButton = binding.backButton
+
+        backButton.setOnClickListener({
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         })
     }
 
@@ -84,5 +93,4 @@ class PasswordRecoveryActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT).show();
         })
     }
-
 }
