@@ -85,7 +85,6 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             checkIfUserExists(email, password, username)
-
         })
 
         backButton = binding.backButton
@@ -95,7 +94,6 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         })
-
     }
 
     private fun checkIfUserExists(email: String, password: String, username: String) {
@@ -149,7 +147,5 @@ class SignUpActivity : AppCompatActivity() {
                     Log.e("SignUpActivity", "Erro ao criar usuário", task.exception)
                 }
             }
-
     }
-
 }
