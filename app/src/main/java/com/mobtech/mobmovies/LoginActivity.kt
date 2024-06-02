@@ -24,8 +24,8 @@ class LoginActivity() : AppCompatActivity() {
 
     private lateinit var editTextEmail : EditText
     private lateinit var editTextPassword : EditText
-    private lateinit var btnSignup: Button
-    private lateinit var btnLogin: Button
+    private lateinit var btnSignup: TextView
+    private lateinit var btnLogin: TextView
     private lateinit var forgotPassword: TextView
     private lateinit var backButton: ImageView
 

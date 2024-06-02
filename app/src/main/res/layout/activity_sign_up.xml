@@ -109,7 +109,7 @@
             android:layout_marginBottom="11dp"/>
 
 
-    <Button
+    <TextView
         android:id="@+id/btn_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -117,5 +117,7 @@
         android:text="Criar conta"
         android:textSize="16dp"
         android:background="@drawable/button_template"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:paddingVertical="11sp"/>
 </LinearLayout>

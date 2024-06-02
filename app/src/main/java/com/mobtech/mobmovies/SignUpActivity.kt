@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +30,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var editTextPasswordRepeat : EditText
     private lateinit var editTextEmailRepeat : EditText
     private lateinit var editTextEmail : EditText
-    private lateinit var btnSignUp : Button
+    private lateinit var btnSignUp : TextView
     private lateinit var backButton: ImageView
 
     private lateinit var auth: FirebaseAuth

@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +21,7 @@ class PasswordRecoveryActivity : AppCompatActivity() {
 
     lateinit var email: EditText;
     lateinit var username: EditText;
-    lateinit var button: Button;
+    lateinit var button: TextView;
     private lateinit var backButton: ImageView
 
     lateinit var auth: FirebaseAuth
