@@ -13,6 +13,8 @@ interface MovieApiService {
         @Query("api_key") apiKey: String
     ): Call<MovieResponse>
 
+    @GET("movie/")
+
     @GET("movie/top_rated")
     fun getTopRatedMovies(
         @Query("language") language: String,
