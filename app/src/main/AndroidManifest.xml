@@ -15,7 +15,21 @@
         android:theme="@style/Theme.MobMovies"
         tools:targetApi="31">
         <activity
+            android:name=".PasswordRecoveryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".MovieDetailActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ActorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
             android:exported="false" />
         <activity
             android:name=".SearchActivity"
