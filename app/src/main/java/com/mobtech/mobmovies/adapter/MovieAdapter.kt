@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.mobtech.mobmovies.data.Movie
 import com.mobtech.mobmovies.R
 
-class MovieAdapter(private val movies: List<Movie>, private val context: Context, private val onItemClickListener: AdapterView.OnItemClickListener) {
+class MovieAdapter(private val movies: List<Movie>, private val context: Context, private val listener: OnItemClickListener) {
 
     interface OnItemClickListener {
         fun onItemClick(movieId: Int)
@@ -22,12 +22,6 @@ class MovieAdapter(private val movies: List<Movie>, private val context: Context
         val inflater = LayoutInflater.from(context)
         for (movie in movies) {
             val view = inflater.inflate(R.layout.item_card, linearLayout, false)
-
-            view.setOnClickListener {
-                onItemClickListener.onItemClick(movie.id)
-            }
-
-            linearLayout.addView(view)
 
             val imageView: ImageView = view.findViewById(R.id.image_post)
             val titleTextView: TextView = view.findViewById(R.id.title_template)
@@ -43,6 +37,11 @@ class MovieAdapter(private val movies: List<Movie>, private val context: Context
 
             titleTextView.text = movie.title
             linearLayout.addView(view)
+
+            // Adiciona o OnClickListener à view do item do filme
+            view.setOnClickListener {
+                listener.onItemClick(movie.id)
+            }
         }
     }
 }

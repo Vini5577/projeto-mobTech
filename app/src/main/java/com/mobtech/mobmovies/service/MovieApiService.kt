@@ -1,5 +1,8 @@
 package com.mobtech.mobmovies.service
 
+import com.mobtech.mobmovies.data.MovieCast
+import com.mobtech.mobmovies.data.MovieDetails
+import com.mobtech.mobmovies.data.MovieProvider
 import com.mobtech.mobmovies.data.MovieResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -12,8 +15,6 @@ interface MovieApiService {
         @Query("language") language: String,
         @Query("api_key") apiKey: String
     ): Call<MovieResponse>
-
-    @GET("movie/")
 
     @GET("movie/top_rated")
     fun getTopRatedMovies(
@@ -46,4 +47,26 @@ interface MovieApiService {
         @Query("language") language: String,
         @Query("api_key") apiKey: String
     ): Call<MovieResponse>
+
+    @GET("movie/{movie_id}")
+    fun getMovieDetails(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<MovieDetails>
+
+    @GET("movie/{movie_id}/credits")
+    fun getMovieCast(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<MovieCast>
+
+    @GET("movie/{movie_id}/watch/providers")
+    fun getMovieProvider(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<MovieProvider>
+
 }

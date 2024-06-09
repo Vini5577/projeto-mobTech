@@ -16,11 +16,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
+import com.mobtech.mobmovies.MovieDetailActivity
 import com.mobtech.mobmovies.data.MovieResponse
 import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.SearchActivity
 import com.mobtech.mobmovies.adapter.MovieAdapter
-import com.mobtech.mobmovies.databinding.ActivityMainBinding
 import com.mobtech.mobmovies.databinding.FragmentMovieBinding
 import com.mobtech.mobmovies.service.MovieApiService
 import retrofit2.Call
@@ -39,7 +39,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MovieFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MovieFragment : Fragment() {
+class MovieFragment : Fragment(), MovieAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentMovieBinding
     private val BASE_URL = "https://api.themoviedb.org/3/"
@@ -74,7 +74,7 @@ class MovieFragment : Fragment() {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { movies ->
-                        val adapter = MovieAdapter(movies, requireContext())
+                        val adapter = MovieAdapter(movies, requireContext(), this@MovieFragment)
                         adapter.bindView(trendingLayout)
                     }
                 }
@@ -91,7 +91,7 @@ class MovieFragment : Fragment() {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { movies ->
-                        val adapter = MovieAdapter(movies, requireContext())
+                        val adapter = MovieAdapter(movies, requireContext(), this@MovieFragment)
                         adapter.bindView(topRatedLayout)
                     }
                 }
@@ -108,7 +108,7 @@ class MovieFragment : Fragment() {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { movies ->
-                        val adapter = MovieAdapter(movies, requireContext())
+                        val adapter = MovieAdapter(movies, requireContext(), this@MovieFragment)
                         adapter.bindView(upComingLayout)
                     }
                 }
@@ -125,7 +125,7 @@ class MovieFragment : Fragment() {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { movies ->
-                        val adapter = MovieAdapter(movies, requireContext())
+                        val adapter = MovieAdapter(movies, requireContext(), this@MovieFragment)
                         adapter.bindView(playingLayout)
                     }
                 }
@@ -204,6 +204,13 @@ class MovieFragment : Fragment() {
                 Log.i(TAG, "onFailure: ${t.message}")
             }
         })
+    }
+
+    override fun onItemClick(movieId: Int) {
+        Log.d(TAG, "Filme selecionado - ID: $movieId")
+        val intent = Intent(requireContext(), MovieDetailActivity::class.java)
+        intent.putExtra("movieId", movieId)
+        startActivity(intent)
     }
 
 

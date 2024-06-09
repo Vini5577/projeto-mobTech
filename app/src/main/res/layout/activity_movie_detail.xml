@@ -76,11 +76,10 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tittleMovie"
+                        android:id="@+id/MovieTitle"
                         android:layout_width="247sp"
                         android:layout_height="wrap_content"
                         android:gravity="start"
-                        android:text="Homem-Aranha: Através do Aranhaverso"
                         android:textColor="@color/white"
                         android:textSize="20sp" />
 
@@ -93,15 +92,15 @@
 
                         <ImageView
                             android:id="@+id/is_like"
-                            android:layout_width="35sp"
-                            android:layout_height="35sp"
+                            android:layout_width="30sp"
+                            android:layout_height="30sp"
                             android:src="@drawable/like"
                             />
 
                         <ImageView
                             android:id="@+id/is_dislike"
-                            android:layout_width="35sp"
-                            android:layout_height="35sp"
+                            android:layout_width="30sp"
+                            android:layout_height="30sp"
                             android:layout_marginLeft="14sp"
                             android:src="@drawable/dislike"
                             />
@@ -137,11 +136,11 @@
 
                         <TextView
                             android:id="@+id/movieTime"
-                            android:layout_width="64dp"
+                            android:layout_width="100sp"
                             android:layout_height="match_parent"
                             android:layout_margin="3dp"
                             android:ems="10"
-                            android:text="1h 40m"
+                            android:text="250 minutos"
                             android:textColor="#BCBCBC"
                             android:textSize="12sp" />
 
@@ -231,8 +230,8 @@
                         android:layout_margin="3dp"
                         android:ems="10"
                         android:inputType="time"
-                        android:text="2 de junho de 2023"
                         android:textColor="#BCBCBC"
+
                         android:textSize="13dp" />
 
 
@@ -240,10 +239,10 @@
                         android:id="@+id/movieCategories"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="20sp"
+                        android:layout_marginLeft="5sp"
                         android:text="Ação, Aventura, Animação, Fantasia"
                         android:textColor="#BCBCBC"
-                        android:textSize="18dp" />
+                        android:textSize="13dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -271,7 +270,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/sinopseText"
+                    android:id="@+id/movieSinopse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -280,7 +279,6 @@
                     android:paddingStart="22dp"
                     android:paddingTop="5dp"
                     android:paddingEnd="10dp"
-                    android:text="Miles Morales retorna para o próximo capítulo da saga do Aranhaverso, uma aventura épica que transportará o Homem-Aranha em tempo integral e amigável do bairro do Brooklyn através do Multiverso para unir forças com Gwen Stacy e uma nova equipe de Homens-Aranha para enfrentar com um vilão mais poderoso do que qualquer coisa que eles já encontraram."
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -289,18 +287,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="22dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:text="Elenco Principal"
+                    android:textSize="16sp"
                     android:textColor="@color/white" />
 
             </LinearLayout>
 
+            <!-- Elenco -->
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="10dp"
+                android:layout_marginTop="10dp"
                 android:scrollbars="none">
 
                 <LinearLayout
@@ -309,41 +309,10 @@
                     android:layout_height="wrap_content"
                     android:baselineAligned="true"
                     android:orientation="horizontal"
+                    android:gravity="center"
                     android:weightSum="4">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:layout_marginLeft="20sp"
-                        android:layout_marginRight="20sp"
-                        android:orientation="vertical">
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/image_actor1"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/view_actor"
-                            app:shapeAppearanceOverlay="@style/roundedimageactor" />
-
-                        <TextView
-                            android:id="@+id/actorName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Mark Hamill"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:id="@+id/actorRole"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="TextView"
-                            android:textColor="#ABA0A0"/>
-                    </LinearLayout>
 
                 </LinearLayout>
             </HorizontalScrollView>
@@ -361,7 +330,6 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="13dp"
                 android:scrollbars="none">
 
@@ -371,19 +339,20 @@
                     android:layout_height="wrap_content"
                     android:baselineAligned="true"
                     android:layout_marginLeft="20sp"
+                    android:orientation="vertical"
                     android:weightSum="4">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10sp"
                         android:layout_marginRight="20sp"
                         app:cardCornerRadius="150dp">
 
                         <ImageView
+                            android:id="@+id/img_provider"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/disney_logo" />
+                            />
 
                     </androidx.cardview.widget.CardView>
 
@@ -528,6 +497,156 @@
                 android:layout_marginVertical="10sp"
                 android:layout_marginHorizontal="24dp"
                 android:background="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="12dp"
+                    android:text="Filmes Relacionados"
+                    android:textSize="16dp"
+                    android:layout_marginLeft="24dp"
+                    />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none"
+                    android:fadeScrollbars="false">
+
+                    <LinearLayout
+                        android:id="@+id/trending_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:contentDescription="caixa filme"
+                        android:layout_marginLeft="24dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <FrameLayout
+                                android:layout_width="142sp"
+                                android:layout_height="106sp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/image_actor"
+                                    android:layout_width="142sp"
+                                    android:layout_height="106sp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/poster2"
+                                    app:shapeAppearanceOverlay="@style/roundedimageview"
+                                    />
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/gradientimgmovieview"
+                                    />
+
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:background="@drawable/border"
+                                    android:gravity="center"
+                                    android:layout_marginLeft="100dp"
+                                    android:layout_marginRight="7dp"
+                                    android:layout_marginTop="6dp">
+
+                                    <TextView
+                                        android:id="@+id/avalicao_item1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentBottom="true"
+                                        android:text="90%"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="12dp"
+                                        tools:ignore="TextSizeCheck" />
+                                </LinearLayout>
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Star Wars: A Ascensão de Skywalker (2019)"
+                                android:textColor="@color/white"
+                                android:textSize="12dp"
+                                tools:ignore="TextSizeCheck" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="16dp">
+                            <FrameLayout
+                                android:layout_width="142sp"
+                                android:layout_height="106sp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/image_post"
+                                    android:layout_width="142sp"
+                                    android:layout_height="106sp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/poster2"
+                                    app:shapeAppearanceOverlay="@style/roundedimageview"
+                                    />
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/gradientimgmovieview"
+                                    />
+
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:background="@drawable/border"
+                                    android:gravity="center"
+                                    android:layout_marginLeft="100dp"
+                                    android:layout_marginRight="7dp"
+                                    android:layout_marginTop="6dp">
+
+                                    <TextView
+                                        android:id="@+id/avalicao_item"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentBottom="true"
+                                        android:text="90%"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="12dp"
+                                        tools:ignore="TextSizeCheck" />
+                                </LinearLayout>
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Star Wars: A Ascensão de Skywalker (2019)"
+                                android:textColor="@color/white"
+                                android:textSize="12dp"
+                                tools:ignore="TextSizeCheck" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </LinearLayout>
 
 
         </LinearLayout>

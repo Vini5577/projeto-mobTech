@@ -1,21 +1,26 @@
 package com.mobtech.mobmovies
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.mobtech.mobmovies.R
+import com.bumptech.glide.Glide
+import com.mobtech.mobmovies.adapter.MovieCastAdapter
+import com.mobtech.mobmovies.adapter.MovieProviderAdapter
 import com.mobtech.mobmovies.service.MovieApiService
-import com.mobtech.mobmovies.fragments.MovieFragment
-import com.mobtech.mobmovies.data.Movie
+import com.mobtech.mobmovies.data.MovieCast
+import com.mobtech.mobmovies.data.MovieDetails
+import com.mobtech.mobmovies.data.MovieProvider
+import com.mobtech.mobmovies.databinding.ActivityMovieDetailBinding
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -24,50 +29,119 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var movieOverview: TextView
     private lateinit var movieReleaseDate: TextView
 
+    private lateinit var api: MovieApiService
+    private val TAG: String = "CHECK_RESPONSE"
+
+    private val BASE_URL = "https://api.themoviedb.org/3/"
+    private val API_KEY = "92f5a194730faec7789a4c569d9ca999"
+
+    private lateinit var binding: ActivityMovieDetailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_detail)
+        binding = ActivityMovieDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        moviePoster = findViewById(R.id.moviePoster)
-        movieTitle = findViewById(R.id.movieTitle)
-        movieOverview = findViewById(R.id.movieOverview)
-        movieReleaseDate = findViewById(R.id.movieReleaseDate)
+        val movieId = intent.getIntExtra("movieId", 0);
+        Log.i(TAG, "onResponse: ${movieId}")
 
-        val movieId = intent.getIntExtra("MOVIE_ID", 0)
-        if (movieId != 0) {
-            fetchMovieDetails(movieId)
-        }
-    }
-
-    private fun fetchMovieDetails(movieId: Int) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/")
+        api = Retrofit.Builder()
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(MovieApiService::class.java)
 
-        val movieApiService = retrofit.create(MovieApiService::class.java)
-        movieApiService.getMovieDetails(movieId).enqueue(object : Callback<Movie> {
-            override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
+        api.getMovieDetails(movieId, API_KEY, "pt-BR").enqueue(object : Callback<MovieDetails> {
+            override fun onResponse(call: Call<MovieDetails>, response: Response<MovieDetails>) {
                 if (response.isSuccessful) {
-                    val movie = response.body()
-                    movie?.let {
-                        updateUI(it)
-                    }
+                    val movieDetails = response.body()
+                    updateUI(movieDetails);
+                } else {
+                    Log.e(TAG, "Erro ao obter detalhes do filme: ${response.code()}")
                 }
             }
 
-            override fun onFailure(call: Call<Movie>, t: Throwable) {
-                // Tratar falha
+            override fun onFailure(call: Call<MovieDetails>, t: Throwable) {
+                Log.e(TAG, "Falha ao obter detalhes do filme", t)
+            }
+        })
+
+        val actorList = binding.actorsList
+
+        api.getMovieCast(movieId, API_KEY, "pt-BR").enqueue(object : Callback<MovieCast> {
+            override fun onResponse(call: Call<MovieCast>, response: Response<MovieCast>) {
+                if (response.isSuccessful) {
+                    response.body()?.cast?.let { casts ->
+                        val adapter = MovieCastAdapter(casts, this@MovieDetailActivity)
+                        adapter.bindView(actorList)
+                    }
+                } else {
+                    Log.e(TAG, "Erro ao obter detalhes do filme: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<MovieCast>, t: Throwable) {
+                Log.e(TAG, "Falha ao obter detalhes do filme", t)
+            }
+        })
+
+        val providerList = binding.providerList
+
+        api.getMovieProvider(movieId, API_KEY, "pt-BR").enqueue(object : Callback<MovieProvider> {
+
+            override fun onResponse(call: Call<MovieProvider>, response: Response<MovieProvider>) {
+                if (response.isSuccessful) {
+                    val movieProvider = response.body()?.results?.get("BR")
+                    Log.e(TAG, "Response: ${response.body()}")
+
+                    movieProvider?.let { providerData ->
+                        val flatRateDataList = providerData.flatrate
+                        Log.e(TAG, "FlatRateDataList: $flatRateDataList")
+                        val adapter = MovieProviderAdapter(flatRateDataList, this@MovieDetailActivity)
+                        adapter.bindView(providerList)
+
+                        Log.e(TAG, "Teste: $providerData")
+                    }
+                } else {
+                    Log.e(TAG, "Erro ao obter provedores de serviços: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<MovieProvider>, t: Throwable) {
+                Log.e(TAG, "Falha ao obter provedores de serviços", t)
             }
         })
     }
 
-    private fun updateUI(movie: Movie) {
-        movieTitle.text = movie.title
-        movieOverview.text = movie.overview
-        movieReleaseDate.text = "Release Date: ${movie.releaseDate}"
+    private fun updateUI(movieDetails: MovieDetails?) {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val releaseDate = dateFormat.parse(movieDetails?.release_date ?: "") ?: Date()
 
-        val posterUrl = "https://image.tmdb.org/t/p/w500/${movie.posterPath}"
-        Glide.with(this).load(posterUrl).into(moviePoster)
+        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(releaseDate)
+
+        val genres = movieDetails?.genres?.joinToString(", ") { it.name }
+
+        movieDetails?.let {
+            // Atualize a interface do usuário com os detalhes do filme
+            binding.MovieTitle.text = it.title
+            binding.movieSinopse.text = it.overview
+            binding.movieReleaseDate.text = formattedDate
+            val text: String = it.runtime?.toString() ?: ""
+            val minutesText = if (it.runtime != null && it.runtime > 1) " minutos" else " minuto"
+            binding.movieTime.text = text + minutesText
+            binding.movieCategories.text = genres
+
+            if(movieDetails.poster_path != null) {
+                Glide.with(this)
+                    .load("https://image.tmdb.org/t/p/w500${movieDetails.poster_path}")
+                    .into(binding.moviePoster)
+            } else {
+                Glide.with(this)
+                    .load("https://www.movienewz.com/img/films/poster-holder.jpg")
+                    .into(binding.moviePoster)
+            }
+
+        }
     }
+
 }

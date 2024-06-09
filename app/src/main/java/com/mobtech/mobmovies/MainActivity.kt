@@ -52,7 +52,5 @@ class MainActivity : AppCompatActivity() {
             val loginScreen = Intent(this, LoginActivity::class.java)
             startActivity(loginScreen)
         })
-
-
     }
 }
