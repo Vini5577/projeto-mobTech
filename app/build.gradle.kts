@@ -52,13 +52,9 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.android.volley:volley:1.2.1")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
-<<<<<<< HEAD
     implementation("androidx.activity:activity:1.9.0")
-=======
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("com.google.firebase:firebase-auth:23.0.0")
-    implementation("androidx.activity:activity:1.8.0")
->>>>>>> hotfix/button-style
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
