@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListener {
+class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListener, MovieCastAdapter.OnItemClickListener {
 
     private lateinit var moviePoster: ImageView
     private lateinit var movieTitle: TextView
@@ -76,7 +76,7 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             override fun onResponse(call: Call<MovieCast>, response: Response<MovieCast>) {
                 if (response.isSuccessful) {
                     response.body()?.cast?.let { casts ->
-                        val adapter = MovieCastAdapter(casts, this@MovieDetailActivity)
+                        val adapter = MovieCastAdapter(casts, this@MovieDetailActivity, this@MovieDetailActivity)
                         adapter.bindView(actorList)
                     }
                 } else {
@@ -169,6 +169,13 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         Log.d(TAG, "Filme selecionado - ID: $movieId")
         val intent = Intent(this, MovieDetailActivity::class.java)
         intent.putExtra("movieId", movieId)
+        startActivity(intent)
+    }
+
+    override fun onItemClickPerson(personId: Int) {
+        Log.d(TAG, "Filme selecionado - ID: $personId")
+        val intent = Intent(this, ActorActivity::class.java)
+        intent.putExtra("personId", personId)
         startActivity(intent)
     }
 

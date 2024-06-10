@@ -11,7 +11,11 @@ import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.data.Cast
 
 
-class MovieCastAdapter(private val movieCast: List<Cast>, private val context: Context) {
+class MovieCastAdapter(private val movieCast: List<Cast>, private val context: Context, private val listener: OnItemClickListener) {
+
+    interface OnItemClickListener {
+        fun onItemClickPerson(personId: Int)
+    }
 
     @SuppressLint("MissingInflatedId")
     fun bindView(linearLayout: LinearLayout) {
@@ -36,6 +40,10 @@ class MovieCastAdapter(private val movieCast: List<Cast>, private val context: C
             name.text = cast.name
             character.text = cast.character
             linearLayout.addView(view)
+
+            view.setOnClickListener {
+                listener.onItemClickPerson(cast.id)
+            }
         }
     }
 }

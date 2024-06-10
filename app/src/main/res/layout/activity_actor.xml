@@ -26,11 +26,10 @@
             android:gravity="center"
             >
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image_actor1"
+                android:id="@+id/person_image"
                 android:layout_width="253dp"
                 android:layout_height="253dp"
                 android:scaleType="center"
-                android:src="@drawable/view_actor"
                 app:shapeAppearanceOverlay="@style/roundedimageactor"
                 app:strokeWidth="2dp"
                 app:strokeColor="@color/white"
@@ -41,6 +40,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/person_name"
                 android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -50,6 +50,7 @@
                 />
 
             <TextView
+                android:id="@+id/person_place_of_birth"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -88,6 +89,7 @@
 
                 <!-- Primeira linha, segunda coluna -->
                 <TextView
+                    android:id="@+id/person_gender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_row="0"
@@ -110,6 +112,7 @@
 
                 <!-- Segunda linha, primeira coluna -->
                 <TextView
+                    android:id="@+id/person_birthday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_row="1"
@@ -134,6 +137,7 @@
 
                 <!-- Primeira linha, segunda coluna -->
                 <TextView
+                    android:id="@+id/person_known_for_department"
                     android:textColor="#BCBCBC"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -164,6 +168,7 @@
                 />
 
             <TextView
+                android:id="@+id/person_biography"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="24dp"
@@ -175,6 +180,7 @@
                 tools:ignore="TextSizeCheck" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -300,6 +306,155 @@
 
                                 <TextView
                                     android:id="@+id/avalicao_item"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:text="90%"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="12dp"
+                                    tools:ignore="TextSizeCheck" />
+                            </LinearLayout>
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Star Wars: A Ascensão de Skywalker (2019)"
+                            android:textColor="@color/white"
+                            android:textSize="12dp"
+                            tools:ignore="TextSizeCheck" />
+                    </LinearLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:layout_marginTop="12dp"
+                android:text="Series"
+                android:textSize="16dp"
+                android:layout_marginLeft="24dp"
+                />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none"
+                android:fadeScrollbars="false">
+
+                <LinearLayout
+                    android:id="@+id/trending_layout1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    android:contentDescription="caixa filme"
+                    android:layout_marginLeft="24dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <FrameLayout
+                            android:layout_width="142sp"
+                            android:layout_height="106sp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/image_actor1"
+                                android:layout_width="142sp"
+                                android:layout_height="106sp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/poster2"
+                                app:shapeAppearanceOverlay="@style/roundedimageview"
+                                />
+
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/gradientimgmovieview"
+                                />
+
+                            <LinearLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/border"
+                                android:gravity="center"
+                                android:layout_marginLeft="100dp"
+                                android:layout_marginRight="7dp"
+                                android:layout_marginTop="6dp">
+
+                                <TextView
+                                    android:id="@+id/avalicao_item11"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:text="90%"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="12dp"
+                                    tools:ignore="TextSizeCheck" />
+                            </LinearLayout>
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Star Wars: A Ascensão de Skywalker (2019)"
+                            android:textColor="@color/white"
+                            android:textSize="12dp"
+                            tools:ignore="TextSizeCheck" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="16dp">
+                        <FrameLayout
+                            android:layout_width="142sp"
+                            android:layout_height="106sp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/image_post1"
+                                android:layout_width="142sp"
+                                android:layout_height="106sp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/poster2"
+                                app:shapeAppearanceOverlay="@style/roundedimageview"
+                                />
+
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/gradientimgmovieview"
+                                />
+
+                            <LinearLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/border"
+                                android:gravity="center"
+                                android:layout_marginLeft="100dp"
+                                android:layout_marginRight="7dp"
+                                android:layout_marginTop="6dp">
+
+                                <TextView
+                                    android:id="@+id/avalicao_item112"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentEnd="true"
