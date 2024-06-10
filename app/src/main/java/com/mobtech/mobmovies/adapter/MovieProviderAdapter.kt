@@ -25,15 +25,13 @@ class MovieProviderAdapter(private val movieProvider: List<FlatRateData>, privat
         val inflater = LayoutInflater.from(context)
 
         for (provider in movieProvider) {
-            Log.e("ProviderAdapter", "Processing provider: $provider")
-            val providerCard = inflater.inflate(R.layout.provider_card, linearLayout, false)
-            val textView: TextView = providerCard.findViewById(R.id.txt_provider)
-            val imageView: ImageView = providerCard.findViewById(R.id.img_provider)
+            val view = inflater.inflate(R.layout.provider_card, linearLayout, false)
+            val imageView: ImageView = view.findViewById(R.id.img_provider)
+            val textView: TextView = view.findViewById(R.id.txt_provider)
 
-            if (provider.logo_path != null) {
-                Log.e("ProviderAdapter", "Logo path: ${provider.logo_path}")
+            if(provider.logo_path != null) {
                 Glide.with(context)
-                    .load("https://image.tmdb.org/t/p/w500${provider.logo_path}")
+                    .load("https://image.tmdb.org/t/p/w185${provider.logo_path}")
                     .into(imageView)
 
                 imageView.visibility = View.VISIBLE
@@ -44,9 +42,7 @@ class MovieProviderAdapter(private val movieProvider: List<FlatRateData>, privat
                 textView.visibility = View.VISIBLE
             }
 
-            Log.e("ProviderAdapter", "Adding view to LinearLayout")
-            linearLayout.addView(providerCard)
-            Log.e("ProviderAdapter", "View added successfully, visibility: ${providerCard.visibility}")
+            linearLayout.addView(view)
         }
     }
 }
