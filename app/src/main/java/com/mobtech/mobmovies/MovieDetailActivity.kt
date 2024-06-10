@@ -6,12 +6,15 @@ import android.widget.TextView
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.mobtech.mobmovies.adapter.MovieAdapter
 import com.mobtech.mobmovies.adapter.MovieCastAdapter
 import com.mobtech.mobmovies.adapter.MovieProviderAdapter
+import com.mobtech.mobmovies.adapter.SimilarMovieAdapter
 import com.mobtech.mobmovies.service.MovieApiService
 import com.mobtech.mobmovies.data.MovieCast
 import com.mobtech.mobmovies.data.MovieDetails
 import com.mobtech.mobmovies.data.MovieProvider
+import com.mobtech.mobmovies.data.MovieResponse
 import com.mobtech.mobmovies.databinding.ActivityMovieDetailBinding
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
@@ -22,7 +25,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class MovieDetailActivity : AppCompatActivity() {
+class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListener {
 
     private lateinit var moviePoster: ImageView
     private lateinit var movieTitle: TextView
@@ -111,6 +114,23 @@ class MovieDetailActivity : AppCompatActivity() {
                 Log.e(TAG, "Falha ao obter provedores de serviços", t)
             }
         })
+
+        val similarMovies = binding.similarMovie
+
+        api.getSimilarMovie(movieId, API_KEY, "pt-BR").enqueue(object: Callback<MovieResponse> {
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                if (response.isSuccessful) {
+                    response.body()?.results?.let { movies ->
+                        val adapter = SimilarMovieAdapter(movies, this@MovieDetailActivity, this@MovieDetailActivity)
+                        adapter.bindView(similarMovies)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                Log.i(TAG, "onFailure: ${t.message}")
+            }
+        })
     }
 
     private fun updateUI(movieDetails: MovieDetails?) {
@@ -142,6 +162,10 @@ class MovieDetailActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    override fun onItemClick(movieId: Int) {
+        TODO("Not yet implemented")
     }
 
 }

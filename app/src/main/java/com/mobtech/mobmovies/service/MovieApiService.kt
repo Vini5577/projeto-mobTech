@@ -69,4 +69,10 @@ interface MovieApiService {
         @Query("language") language: String
     ): Call<MovieProvider>
 
+    @GET("movie/{movie_id}/similar")
+    fun getSimilarMovie(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<MovieResponse>
 }
