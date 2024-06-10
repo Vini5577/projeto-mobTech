@@ -1,5 +1,6 @@
 package com.mobtech.mobmovies.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import com.mobtech.mobmovies.MovieDetailActivity
 import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.adapter.MovieAdapter
 import com.mobtech.mobmovies.adapter.SearchMovieAdapter
@@ -27,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 
 
-class SearchMovieFragment() : Fragment() {
+class SearchMovieFragment() : Fragment(), MovieAdapter.OnItemClickListener {
     private lateinit var binding: FragmentSearchMovieBinding
     private val BASE_URL = "https://api.themoviedb.org/3/"
     private val API_KEY = "92f5a194730faec7789a4c569d9ca999"
@@ -66,7 +68,7 @@ class SearchMovieFragment() : Fragment() {
                     ) {
                         if (isAdded && response.isSuccessful) {
                             response.body()?.results?.let { movies ->
-                                val adapter = SearchMovieAdapter(movies, requireContext())
+                                val adapter = SearchMovieAdapter(movies, requireContext(), this@SearchMovieFragment)
                                 adapter.bindView(searchLayout, movies)
                             }
                         }
@@ -99,7 +101,7 @@ class SearchMovieFragment() : Fragment() {
                             ) {
                                 if (isAdded && response.isSuccessful) {
                                     response.body()?.results?.let { movies ->
-                                        val adapter = SearchMovieAdapter(movies, requireContext())
+                                        val adapter = SearchMovieAdapter(movies, requireContext(), this@SearchMovieFragment)
                                         adapter.bindView(searchLayout, movies)
                                     }
                                 }
@@ -122,6 +124,13 @@ class SearchMovieFragment() : Fragment() {
         })
 
         return view
+    }
+
+    override fun onItemClick(movieId: Int) {
+        Log.d(TAG, "Filme selecionado - ID: $movieId")
+        val intent = Intent(requireContext(), MovieDetailActivity::class.java)
+        intent.putExtra("movieId", movieId)
+        startActivity(intent)
     }
 
 

@@ -38,7 +38,6 @@ class MovieAdapter(private val movies: List<Movie>, private val context: Context
             titleTextView.text = movie.title
             linearLayout.addView(view)
 
-            // Adiciona o OnClickListener à view do item do filme
             view.setOnClickListener {
                 listener.onItemClick(movie.id)
             }

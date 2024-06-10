@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -176,10 +177,10 @@ class MovieFragment : Fragment(), MovieAdapter.OnItemClickListener {
                     if (recommendations != null && recommendations.isNotEmpty()) {
                         val randomMovie = recommendations.random()
 
-                        val recomendacaoFilme =
-                            view.findViewById<ShapeableImageView>(R.id.recomendacao_filme)
+                        val recomendacaoFilme = view.findViewById<ShapeableImageView>(R.id.recomendacao_filme)
                         val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto)
                         val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao)
+                        val movieRecomendation = view.findViewById<FrameLayout>(R.id.movie_recomendation)
 
                         if(TextUtils.isEmpty(randomMovie.poster_path)) {
                             Glide.with(requireContext())
@@ -189,6 +190,13 @@ class MovieFragment : Fragment(), MovieAdapter.OnItemClickListener {
                             Glide.with(requireContext())
                                 .load("https://image.tmdb.org/t/p/w500${randomMovie.poster_path}")
                                 .into(recomendacaoFilme)
+                        }
+
+                        movieRecomendation.setOnClickListener {
+                            Log.d(TAG, "Filme selecionado - ID: ${randomMovie.id}")
+                            val intent = Intent(requireContext(), MovieDetailActivity::class.java)
+                            intent.putExtra("movieId", randomMovie.id)
+                            startActivity(intent)
                         }
 
                         recomendacaoTexto.text = randomMovie.title

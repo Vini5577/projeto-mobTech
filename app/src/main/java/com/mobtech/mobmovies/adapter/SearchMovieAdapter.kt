@@ -11,8 +11,12 @@ import com.bumptech.glide.Glide
 import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.data.Movie
 
-class SearchMovieAdapter(private val movies: List<Movie>, private val context: Context) {
+class SearchMovieAdapter(private val movies: List<Movie>, private val context: Context, private val listener: MovieAdapter.OnItemClickListener) {
 
+
+    interface OnItemClickListener {
+        fun onItemClick(movieId: Int)
+    }
 
     @SuppressLint("MissingInflatedId")
     fun bindView(gridLayout: GridLayout, movies: List<Movie>) {
@@ -42,6 +46,10 @@ class SearchMovieAdapter(private val movies: List<Movie>, private val context: C
             }
 
             gridLayout.addView(view, params)
+
+            view.setOnClickListener {
+                listener.onItemClick(movie.id)
+            }
         }
     }
 }

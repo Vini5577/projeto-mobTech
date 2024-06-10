@@ -1,5 +1,6 @@
 package com.mobtech.mobmovies
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -165,7 +166,10 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
     }
 
     override fun onItemClick(movieId: Int) {
-        TODO("Not yet implemented")
+        Log.d(TAG, "Filme selecionado - ID: $movieId")
+        val intent = Intent(this, MovieDetailActivity::class.java)
+        intent.putExtra("movieId", movieId)
+        startActivity(intent)
     }
 
 }
