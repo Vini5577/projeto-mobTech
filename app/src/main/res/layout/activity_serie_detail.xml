@@ -1,10 +1,572 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/main_background"
     tools:context=".SerieDetailActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/seriePoster"
+                android:layout_width="wrap_content"
+                android:layout_height="287dp"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/poster"
+                android:foreground="@drawable/gradient_overlay"/>
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/back_button" />
+
+            <FrameLayout
+                android:layout_width="49.02sp"
+                android:layout_height="40.17sp"
+                android:layout_marginTop="236sp"
+                android:layout_marginLeft="355sp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/transparent_background"
+                    />
+
+                <ImageView
+                    android:id="@+id/is_favorite"
+                    android:layout_width="31.02sp"
+                    android:layout_height="28.17sp"
+                    android:src="@drawable/star_favorite"
+                    android:layout_marginHorizontal="9sp"
+                    android:layout_marginVertical="6sp"
+                    />
+            </FrameLayout>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/infoSerie1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingTop="10dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:gravity="fill"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/SerieTitle"
+                    android:layout_width="247sp"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14sp"
+                    android:gravity="fill_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/is_like"
+                        android:layout_width="30sp"
+                        android:layout_height="30sp"
+                        android:src="@drawable/like"
+                        />
+
+                    <ImageView
+                        android:id="@+id/is_dislike"
+                        android:layout_width="30sp"
+                        android:layout_height="30sp"
+                        android:layout_marginLeft="14sp"
+                        android:src="@drawable/dislike"
+                        />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="2dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/clock" />
+
+                    <TextView
+                        android:id="@+id/SerieTime"
+                        android:layout_width="100sp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="3dp"
+                        android:ems="10"
+                        android:textColor="#BCBCBC"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    >
+
+                    <ImageView
+                        android:id="@+id/star"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/star_avalietion" />
+
+                    <TextView
+                        android:id="@+id/text_avaliation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginStart="5dp"
+                        android:text="90% gostaram do filme"
+                        android:textColor="#BCBCBC" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="24dp"
+            android:background="#515151" />
+
+        <LinearLayout
+            android:id="@+id/infoSerie2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="fill"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/releaseDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Data de lançamento"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_marginLeft="20sp"
+                    android:id="@+id/category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Gênero"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal"
+                android:orientation="horizontal"
+                tools:gravity="center">
+
+                <TextView
+                    android:id="@+id/serieReleaseDate"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:ems="10"
+                    android:textColor="#BCBCBC"
+                    android:textSize="13dp" />
+
+
+                <TextView
+                    android:id="@+id/serieCategories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5sp"
+                    android:textColor="#BCBCBC"
+                    android:textSize="13dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal"
+                android:orientation="horizontal"
+                tools:gravity="center">
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:ems="10"
+                    android:text="Data da última exibição"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    />
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:ems="10"
+                    android:text="Quantidade de Episodios"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal"
+                android:orientation="horizontal"
+                tools:gravity="center">
+
+                <TextView
+                    android:id="@+id/serie_last_air_date"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:ems="10"
+                    android:textColor="#BCBCBC"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/serie_episode_run_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5sp"
+                    android:textColor="#BCBCBC"
+                    android:textSize="13dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="24dp"
+            android:background="#515151" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sinopse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="22dp"
+                android:paddingTop="5dp"
+                android:text="Sinopse"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:id="@+id/serieSinopse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="4"
+                android:paddingStart="22dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/actorsCrew"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="10dp"
+                android:text="Elenco Principal"
+                android:textSize="16sp"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <!-- Elenco -->
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/actorsList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:baselineAligned="true"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="4">
+
+
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Disponivel"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="13dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/provider_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:baselineAligned="true"
+                android:layout_marginLeft="20sp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+
+        <TextView
+            android:id="@+id/btn_commetary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_template"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:layout_margin="22dp"
+            android:text="Comentar"
+            android:gravity="center"
+            android:paddingVertical="11sp"/>
+
+        <LinearLayout
+            android:id="@+id/commentary_box"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="150dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_person" />
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp">
+
+                <TextView
+                    android:id="@+id/user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="pedro"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="23/03/2024"
+                    android:textColor="#BCBCBC"
+                    />
+
+                <TextView
+                    android:id="@+id/commentary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Achei esse filme muito ruim!"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="10sp"
+            android:layout_marginHorizontal="24dp"
+            android:background="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/commentary_box1"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="150dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_person" />
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp">
+
+                <TextView
+                    android:id="@+id/user1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="pedro"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    />
+
+                <TextView
+                    android:id="@+id/date1"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="23/03/2024"
+                    android:textColor="#BCBCBC"
+                    />
+
+                <TextView
+                    android:id="@+id/commentary1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Achei esse filme muito ruim!"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="10sp"
+            android:layout_marginHorizontal="24dp"
+            android:background="@color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:layout_marginTop="12dp"
+                android:text="Séries Relacionados"
+                android:textSize="16dp"
+                android:layout_marginLeft="24dp"
+                />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none"
+                android:fadeScrollbars="false">
+
+                <LinearLayout
+                    android:id="@+id/similar_serie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    android:contentDescription="caixa filme"
+                    android:layout_marginLeft="24dp">
+
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

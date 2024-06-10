@@ -140,7 +140,6 @@
                             android:layout_height="match_parent"
                             android:layout_margin="3dp"
                             android:ems="10"
-                            android:text="250 minutos"
                             android:textColor="#BCBCBC"
                             android:textSize="12sp" />
 
@@ -231,7 +230,6 @@
                         android:ems="10"
                         android:inputType="time"
                         android:textColor="#BCBCBC"
-
                         android:textSize="13dp" />
 
 
@@ -240,7 +238,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="5sp"
-                        android:text="Ação, Aventura, Animação, Fantasia"
                         android:textColor="#BCBCBC"
                         android:textSize="13dp" />
                 </LinearLayout>

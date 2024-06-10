@@ -9,12 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
+import com.mobtech.mobmovies.MovieDetailActivity
 import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.SearchActivity
+import com.mobtech.mobmovies.SerieDetailActivity
 import com.mobtech.mobmovies.adapter.MovieAdapter
 import com.mobtech.mobmovies.adapter.SerieAdapter
 import com.mobtech.mobmovies.data.MovieResponse
@@ -36,13 +39,7 @@ import retrofit2.create
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SeriesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SeriesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+class SeriesFragment : Fragment(),SerieAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentSeriesBinding
     private val BASE_URL = "https://api.themoviedb.org/3/"
@@ -75,7 +72,7 @@ class SeriesFragment : Fragment() {
             override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { series ->
-                        val adapter = SerieAdapter(series, requireContext())
+                        val adapter = SerieAdapter(series, requireContext(), this@SeriesFragment)
                         adapter.bindView(trendingLayout)
                     }
                 }
@@ -91,7 +88,7 @@ class SeriesFragment : Fragment() {
             override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { series ->
-                        val adapter = SerieAdapter(series, requireContext())
+                        val adapter = SerieAdapter(series, requireContext(), this@SeriesFragment)
                         adapter.bindView(topRatedSeries)
                     }
                 }
@@ -107,7 +104,7 @@ class SeriesFragment : Fragment() {
             override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { series ->
-                        val adapter = SerieAdapter(series, requireContext())
+                        val adapter = SerieAdapter(series, requireContext(), this@SeriesFragment)
                         adapter.bindView(airingTodayLayout)
                     }
                 }
@@ -159,14 +156,21 @@ class SeriesFragment : Fragment() {
                     if (recommendations != null && recommendations.isNotEmpty()) {
                         val randomSerie = recommendations.random()
 
-                        val recomendacaoFilme =
+                        val recomendacaoSerie =
                             view.findViewById<ShapeableImageView>(R.id.recomendacao_serie)
                         val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto_serie)
                         val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao_serie)
+                        val serieRecomendation = view.findViewById<FrameLayout>(R.id.serie_recomendation)
 
                         Glide.with(requireContext())
                             .load("https://image.tmdb.org/t/p/w500${randomSerie.poster_path}")
-                            .into(recomendacaoFilme)
+                            .into(recomendacaoSerie)
+
+                        serieRecomendation.setOnClickListener {
+                            val intent = Intent(requireContext(), SerieDetailActivity::class.java)
+                            intent.putExtra("serieId", randomSerie.id)
+                            startActivity(intent)
+                        }
 
                         recomendacaoTexto.text = randomSerie.name
                         recomendacaoAvaliacao.text = "${(randomSerie.vote_average * 10).toInt()}%"
@@ -182,6 +186,12 @@ class SeriesFragment : Fragment() {
         })
     }
 
+    override fun onItemClickSerie(serieId: Int) {
+        val intent = Intent(requireContext(), SerieDetailActivity::class.java)
+        intent.putExtra("serieId", serieId)
+        startActivity(intent)
+    }
+
     companion object {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
@@ -192,4 +202,5 @@ class SeriesFragment : Fragment() {
                 }
             }
     }
+
 }

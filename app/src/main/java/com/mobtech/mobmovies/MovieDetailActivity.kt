@@ -34,6 +34,7 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
     private val BASE_URL = "https://api.themoviedb.org/3/"
     private val API_KEY = "92f5a194730faec7789a4c569d9ca999"
 
+    private lateinit var backButton: ImageView
     private lateinit var binding: ActivityMovieDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,6 +124,12 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
                 Log.i(TAG, "onFailure: ${t.message}")
             }
+        })
+
+        backButton = binding.backButton
+
+        backButton.setOnClickListener({
+            onBackPressed()
         })
     }
 

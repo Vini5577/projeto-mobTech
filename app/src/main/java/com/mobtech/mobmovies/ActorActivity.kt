@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.ParseException
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.mobtech.mobmovies.adapter.MovieCompactAdapter
@@ -28,6 +29,8 @@ class ActorActivity : AppCompatActivity(), MovieCompactAdapter.OnItemClickListen
     private val API_KEY = "92f5a194730faec7789a4c569d9ca999"
     private val TAG: String = "CHECK_RESPONSE"
     private lateinit var api: PersonApiService
+
+    private lateinit var backButton: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +98,12 @@ class ActorActivity : AppCompatActivity(), MovieCompactAdapter.OnItemClickListen
             override fun onFailure(call: Call<PersonTVCredits>, t: Throwable) {
                 Log.e(TAG, "Falha ao obter créditos de TV da pessoa", t)
             }
+        })
+
+        backButton = binding.backButton
+
+        backButton.setOnClickListener({
+            onBackPressed()
         })
     }
 
