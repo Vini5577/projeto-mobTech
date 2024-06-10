@@ -127,7 +127,6 @@ class SearchMovieFragment() : Fragment(), MovieAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(movieId: Int) {
-        Log.d(TAG, "Filme selecionado - ID: $movieId")
         val intent = Intent(requireContext(), MovieDetailActivity::class.java)
         intent.putExtra("movieId", movieId)
         startActivity(intent)

@@ -28,11 +28,6 @@ import java.util.Locale
 
 class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListener, MovieCastAdapter.OnItemClickListener {
 
-    private lateinit var moviePoster: ImageView
-    private lateinit var movieTitle: TextView
-    private lateinit var movieOverview: TextView
-    private lateinit var movieReleaseDate: TextView
-
     private lateinit var api: MovieApiService
     private val TAG: String = "CHECK_RESPONSE"
 
@@ -47,7 +42,6 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         setContentView(binding.root)
 
         val movieId = intent.getIntExtra("movieId", 0);
-        Log.i(TAG, "onResponse: ${movieId}")
 
         api = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -96,11 +90,9 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             override fun onResponse(call: Call<MovieProvider>, response: Response<MovieProvider>) {
                 if (response.isSuccessful) {
                     val movieProvider = response.body()?.results?.get("BR")
-                    Log.e(TAG, "Response: ${response.body()}")
 
                     movieProvider?.let { providerData ->
                         val flatRateDataList = providerData.flatrate
-                        Log.e(TAG, "FlatRateDataList: $flatRateDataList")
                         val adapter = MovieProviderAdapter(flatRateDataList, this@MovieDetailActivity)
                         adapter.bindView(providerList)
 

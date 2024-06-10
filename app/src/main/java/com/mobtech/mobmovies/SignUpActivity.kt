@@ -80,7 +80,6 @@ class SignUpActivity : AppCompatActivity() {
 
             if (!email.equals(emailRepeat) || !password.equals(passwordRepeat)) {
                 Toast.makeText(this, "Os campos de email e senha devem ser iguais", Toast.LENGTH_SHORT).show()
-                Log.d("SignUpActivity", "Email: $email, Email Repeat: $emailRepeat, Password: $password, Password Repeat: $passwordRepeat")
                 return@setOnClickListener
             }
 

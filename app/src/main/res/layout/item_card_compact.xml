@@ -7,16 +7,16 @@
     android:layout_weight="1"
     android:orientation="vertical"
     android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp">
+    android:layout_marginRight="30dp">
 
     <FrameLayout
-        android:layout_width="224.21sp"
-        android:layout_height="318sp">
+        android:layout_width="142sp"
+        android:layout_height="106sp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image_post"
-            android:layout_width="224.21sp"
-            android:layout_height="318sp"
+            android:layout_width="142sp"
+            android:layout_height="106sp"
             app:shapeAppearanceOverlay="@style/roundedimageview"
             android:scaleType="centerCrop" />
 
@@ -27,15 +27,15 @@
             android:background="@drawable/gradientimgmovieview" />
 
         <LinearLayout
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:background="@drawable/border"
             android:gravity="center"
-            android:layout_marginLeft="166dp"
-            android:layout_marginRight="8.48dp"
-            android:layout_marginTop="6.2dp">
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginTop="6dp">
 
             <TextView
                 android:id="@+id/avalicao_item"
@@ -45,7 +45,7 @@
                 android:layout_alignParentBottom="true"
                 android:text="90%"
                 android:textColor="@android:color/white"
-                android:textSize="16dp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
     </FrameLayout>
@@ -54,11 +54,11 @@
     <TextView
         android:id="@+id/title_template"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="12dp"
         android:layout_weight="1"
         android:gravity="center"
         android:textColor="@color/white"
-        android:layout_marginTop="10dp"
         />
 
 </LinearLayout>

@@ -193,7 +193,6 @@ class MovieFragment : Fragment(), MovieAdapter.OnItemClickListener {
                         }
 
                         movieRecomendation.setOnClickListener {
-                            Log.d(TAG, "Filme selecionado - ID: ${randomMovie.id}")
                             val intent = Intent(requireContext(), MovieDetailActivity::class.java)
                             intent.putExtra("movieId", randomMovie.id)
                             startActivity(intent)
@@ -215,7 +214,6 @@ class MovieFragment : Fragment(), MovieAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(movieId: Int) {
-        Log.d(TAG, "Filme selecionado - ID: $movieId")
         val intent = Intent(requireContext(), MovieDetailActivity::class.java)
         intent.putExtra("movieId", movieId)
         startActivity(intent)

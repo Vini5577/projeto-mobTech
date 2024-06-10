@@ -173,8 +173,6 @@ class SeriesFragment : Fragment() {
                     } else {
                         Log.d(TAG, "Lista de recomendações vazia")
                     }
-
-
                 }
             }
 
