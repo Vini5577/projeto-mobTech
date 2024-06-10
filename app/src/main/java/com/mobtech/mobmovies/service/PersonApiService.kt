@@ -1,6 +1,7 @@
 package com.mobtech.mobmovies.service
 
 import com.mobtech.mobmovies.data.PersonData
+import com.mobtech.mobmovies.data.PersonMovieCredits
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -14,5 +15,12 @@ interface PersonApiService {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ): Call<PersonData>
+
+    @GET("person/{person_id}/movie_credits")
+    fun getPersonMovies (
+        @Path("person_id") personId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<PersonMovieCredits>
 
 }

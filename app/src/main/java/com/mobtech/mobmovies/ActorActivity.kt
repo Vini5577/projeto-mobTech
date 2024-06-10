@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.mobtech.mobmovies.data.MovieDetails
 import com.mobtech.mobmovies.data.PersonData
+import com.mobtech.mobmovies.data.PersonMovieCredits
 import com.mobtech.mobmovies.databinding.ActivityActorBinding
 import com.mobtech.mobmovies.databinding.FragmentMovieBinding
 import com.mobtech.mobmovies.service.MovieApiService
@@ -56,6 +57,23 @@ class ActorActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<PersonData>, t: Throwable) {
+                Log.e(TAG, "Falha ao obter detalhes da pessoa", t)
+            }
+        })
+
+        val movieCredits = binding.movieCredits
+
+        api.getPersonMovies(personId, API_KEY, "pt-BR").enqueue(object : Callback<PersonMovieCredits>{
+            override fun onResponse(call: Call<PersonMovieCredits>, response: Response<PersonMovieCredits>) {
+                if (response.isSuccessful) {
+                    val personData = response.cast?.body()
+
+                } else {
+                    Log.e(TAG, "Erro ao obter detalhes da pessoa: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<PersonMovieCredits>, t: Throwable) {
                 Log.e(TAG, "Falha ao obter detalhes da pessoa", t)
             }
         })
