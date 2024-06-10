@@ -18,6 +18,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ActorActivity : AppCompatActivity() {
 
@@ -30,7 +33,7 @@ class ActorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityActorBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_actor)
+        setContentView(binding.root)
 
         api = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -62,6 +65,11 @@ class ActorActivity : AppCompatActivity() {
         Log.e(TAG, "$personData")
         Log.e(TAG, "${personData.profile_path}")
 
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val birthday = dateFormat.parse(personData?.birthday ?: "") ?: Date()
+
+        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(birthday)
+
         if(personData.profile_path != null) {
             Glide.with(this)
                 .load("https://image.tmdb.org/t/p/w500${personData.profile_path}")
@@ -75,8 +83,8 @@ class ActorActivity : AppCompatActivity() {
         binding.personName.text = personData.name
         binding.personPlaceOfBirth.text = personData.place_of_birth
         binding.personGender.text = if(personData.gender == 2) "Masculino" else "Feminino"
-        binding.personKnownForDepartment.text = personData.known_for_department
-        binding.personBirthday.text = personData.birthday
+        binding.personKnownForDepartment.text = if(personData.known_for_department.equals("Acting")) "Atuação" else personData.known_for_department
+        binding.personBirthday.text = formattedDate
         binding.personBiography.text = personData.biography
 
     }

@@ -143,7 +143,6 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         val genres = movieDetails?.genres?.joinToString(", ") { it.name }
 
         movieDetails?.let {
-            // Atualize a interface do usuário com os detalhes do filme
             binding.MovieTitle.text = it.title
             binding.movieSinopse.text = it.overview
             binding.movieReleaseDate.text = formattedDate
