@@ -25,7 +25,7 @@
             android:src="@drawable/mobtech_logo" />
 
         <ImageView
-            android:id="@+id/icon"
+            android:id="@+id/icon_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="176sp"
@@ -53,7 +53,7 @@
         app:tabGravity="fill"/>
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
+        android:id="@+id/generate_fragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="Conteúdo principal"
