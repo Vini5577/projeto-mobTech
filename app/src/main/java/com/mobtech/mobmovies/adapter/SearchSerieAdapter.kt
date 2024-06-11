@@ -3,6 +3,7 @@ package com.mobtech.mobmovies.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,7 +12,11 @@ import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.data.Movie
 import com.mobtech.mobmovies.data.Serie
 
-class SearchSerieAdapter(private val series: List<Serie>, private val context: Context) {
+class SearchSerieAdapter(private val series: List<Serie>, private val context: Context, private val listener: OnItemClickListener) {
+
+    interface OnItemClickListener {
+        fun onItemClick(serieId: Int)
+    }
 
     @SuppressLint("MissingInflatedId")
     fun bindView(gridLayout: GridLayout, series: List<Serie>) {
@@ -41,6 +46,10 @@ class SearchSerieAdapter(private val series: List<Serie>, private val context: C
             }
 
             gridLayout.addView(view, params)
+
+            view.setOnClickListener {
+                listener.onItemClick(serie.id)
+            }
         }
     }
 }

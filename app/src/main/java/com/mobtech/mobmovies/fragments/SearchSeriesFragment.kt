@@ -1,5 +1,6 @@
 package com.mobtech.mobmovies.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,7 +11,9 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.GridLayout
 import androidx.fragment.app.Fragment
+import com.mobtech.mobmovies.MovieDetailActivity
 import com.mobtech.mobmovies.R
+import com.mobtech.mobmovies.SerieDetailActivity
 import com.mobtech.mobmovies.adapter.SearchMovieAdapter
 import com.mobtech.mobmovies.adapter.SearchSerieAdapter
 import com.mobtech.mobmovies.data.MovieResponse
@@ -31,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Use the [SearchSeriesFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SearchSeriesFragment : Fragment() {
+class SearchSeriesFragment : Fragment(), SearchSerieAdapter.OnItemClickListener {
     // TODO: Rename and change types of parameters
     private lateinit var binding: FragmentSearchSeriesBinding
     private val BASE_URL = "https://api.themoviedb.org/3/"
@@ -72,7 +75,7 @@ class SearchSeriesFragment : Fragment() {
                     ) {
                         if (isAdded && response.isSuccessful) {
                             response.body()?.results?.let { series ->
-                                val adapter = SearchSerieAdapter(series, requireContext())
+                                val adapter = SearchSerieAdapter(series, requireContext(), this@SearchSeriesFragment)
                                 adapter.bindView(searchLayout, series)
                             }
                         }
@@ -105,7 +108,7 @@ class SearchSeriesFragment : Fragment() {
                             ) {
                                 if (isAdded && response.isSuccessful) {
                                     response.body()?.results?.let { series ->
-                                        val adapter = SearchSerieAdapter(series, requireContext())
+                                        val adapter = SearchSerieAdapter(series, requireContext(), this@SearchSeriesFragment)
                                         adapter.bindView(searchLayout, series)
                                     }
                                 }
@@ -130,20 +133,9 @@ class SearchSeriesFragment : Fragment() {
         return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchSeriesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchSeriesFragment().apply {
-
-            }
+    override fun onItemClick(serieId: Int) {
+        val intent = Intent(requireContext(), SerieDetailActivity::class.java)
+        intent.putExtra("serieId", serieId)
+        startActivity(intent)
     }
 }

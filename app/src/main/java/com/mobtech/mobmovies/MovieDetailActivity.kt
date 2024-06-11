@@ -35,6 +35,7 @@ import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.log
 
 class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListener, MovieCastAdapter.OnItemClickListener {
 
@@ -178,10 +179,19 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
 
             isFavoriteImageView = binding.isFavorite
 
+            lifecycleScope.launch {
+                val isFavorite = checkIfFavorite(movieDetails.id, "movie")
+                if (isFavorite) {
+                    isFavoriteImageView.setImageResource(R.drawable.start_favorited)
+                } else {
+                    isFavoriteImageView.setImageResource(R.drawable.star_favorite)
+                }
+            }
+
             isFavoriteImageView.setOnClickListener({
                 if(isUserLoggedIn()) {
                     lifecycleScope.launch {
-                        val isFavorite: Boolean = checkIfFavorite(movieDetails.id);
+                        val isFavorite: Boolean = checkIfFavorite(movieDetails.id, "movie");
 
                         if(isFavorite) {
                             removeFromFavorites(movieDetails.id)
@@ -254,7 +264,7 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         }
     }
 
-    private suspend fun checkIfFavorite(movieId: Int): Boolean {
+    private suspend fun checkIfFavorite(movieId: Int, categoria: String): Boolean {
         val user = Firebase.auth.currentUser
         if (user != null) {
             val favoritesRef = Firebase.firestore.collection("favorites").document(user.uid)
@@ -262,7 +272,13 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                 val document = favoritesRef.get().await()
                 if (document.exists()) {
                     val favorites = document.data ?: return false
-                    favorites.containsKey(movieId.toString())
+                    val verifyId = favorites.containsKey("${movieId}")
+                    val movieData = favorites?.get(movieId.toString()) as Map<String, Any>
+                    val movieCategory = movieData["categoria"] as String
+
+                    Log.e("CHECK RESPONSE", "verificando categoria: ${movieCategory.equals("movie")}")
+
+                    return verifyId && movieCategory.equals("movie")
                 } else {
                     false
                 }

@@ -179,6 +179,15 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
                     .into(binding.seriePoster)
             }
 
+           lifecycleScope.launch {
+               val isFavorite = checkIfFavorite(serieDetails.id, "serie")
+               if (isFavorite) {
+                   isFavoriteImageView.setImageResource(R.drawable.start_favorited)
+               } else {
+                   isFavoriteImageView.setImageResource(R.drawable.star_favorite)
+               }
+           }
+
         }
 
         backButton = binding.backButton
@@ -192,7 +201,7 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
         isFavoriteImageView.setOnClickListener({
             if(isUserLoggedIn()) {
                 lifecycleScope.launch {
-                    val isFavorite: Boolean = checkIfFavorite(serieDetails.id);
+                    val isFavorite: Boolean = checkIfFavorite(serieDetails.id, "serie");
 
                     if(isFavorite) {
                         removeFromFavorites(serieDetails.id)
@@ -262,7 +271,7 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
         }
     }
 
-    private suspend fun checkIfFavorite(serieId: Int): Boolean {
+    private suspend fun checkIfFavorite(serieId: Int, category: String): Boolean {
         val user = Firebase.auth.currentUser
         if (user != null) {
             val favoritesRef = Firebase.firestore.collection("favorites").document(user.uid)
@@ -270,7 +279,11 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
                 val document = favoritesRef.get().await()
                 if (document.exists()) {
                     val favorites = document.data ?: return false
-                    favorites.containsKey(serieId.toString())
+                    val verifyId = favorites.containsKey("${serieId}")
+                    val serieData = favorites?.get(serieId.toString()) as Map<String, Any>
+                    val serieCategory = serieData["categoria"] as String
+
+                    return verifyId && serieCategory.equals("serie")
                 } else {
                     false
                 }

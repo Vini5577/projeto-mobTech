@@ -6,9 +6,6 @@ import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mobtech.mobmovies.fragments.SearchFavoriteFragment
-import com.mobtech.mobmovies.fragments.SearchMovieFragment
-import com.mobtech.mobmovies.fragments.SearchSeriesFragment
 
 class SearchActivity : AppCompatActivity() {
 
