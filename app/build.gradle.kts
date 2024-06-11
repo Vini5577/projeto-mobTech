@@ -55,6 +55,8 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("com.google.firebase:firebase-auth:23.0.0")
     implementation("androidx.activity:activity:1.8.0")
+    implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+    implementation("androidx.databinding:databinding-runtime:8.4.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
