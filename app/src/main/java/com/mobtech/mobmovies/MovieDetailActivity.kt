@@ -158,6 +158,9 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
 
         val genres = movieDetails?.genres?.joinToString(", ") { it.name }
 
+        val isLikeImageView = binding.isLike
+        val isDislikeImageView = binding.isDislike
+
         movieDetails?.let {
             binding.MovieTitle.text = it.title
             binding.movieSinopse.text = it.overview
@@ -186,6 +189,18 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                 } else {
                     isFavoriteImageView.setImageResource(R.drawable.star_favorite)
                 }
+
+                val isLike = checkIfLike(movieDetails.id)
+                if(isLike) {
+                    isLikeImageView.setImageResource(R.drawable.liked)
+                }
+
+                val isDislike = checkIfDislike(movieDetails.id)
+                if(isDislike) {
+                    isDislikeImageView.setImageResource(R.drawable.disliked)
+                }
+
+                binding.textAvaliation.text = "${(movieDetails.vote_average * 10).toInt()}% gostram do filme"
             }
 
             isFavoriteImageView.setOnClickListener({
@@ -203,6 +218,14 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                     Toast.makeText(this@MovieDetailActivity, "Você precisa estar logado para favoritar esta série", Toast.LENGTH_SHORT).show()
                 }
             })
+
+            isLikeImageView.setOnClickListener {
+                updateLikeStatus(movieDetails.id, "like")
+            }
+
+            isDislikeImageView.setOnClickListener {
+                updateLikeStatus(movieDetails.id, "dislike")
+            }
 
         }
     }
@@ -233,7 +256,8 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                 movieId.toString() to mapOf(
                     "poster_path" to movieDetails.poster_path,
                     "nome" to movieDetails.title,
-                    "categoria" to "movie"
+                    "categoria" to "movie",
+                    "vote_average" to movieDetails.vote_average
                 )
             )
             favoritesRef.set(favoriteData, SetOptions.merge())
@@ -290,4 +314,136 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         return false
     }
 
+    private fun updateLikeStatus(movieId: Int, action: String) {
+        val isLikeImageView = binding.isLike
+        val isDislikeImageView = binding.isDislike
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            val ratingRef = Firebase.firestore.collection("rating").document(user.uid)
+            ratingRef.get()
+                .addOnSuccessListener { document ->
+                    val movieData = document.data?.get(movieId.toString()) as? Map<String, Any>
+                    if (movieData != null && movieData["categoria"] == "movie") {
+                        val currentLikes = movieData["likes"] as? Long ?: 0
+                        val currentDislikes = movieData["dislikes"] as? Long ?: 0
+
+                        when (action) {
+                            "like" -> {
+                                if (currentLikes > 0) {
+                                    // Remove o like
+                                    ratingRef.update(movieId.toString(), mapOf(
+                                        "likes" to FieldValue.increment(-1)
+                                    )).addOnSuccessListener {
+                                        isLikeImageView.setImageResource(R.drawable.like)
+                                    }
+                                } else {
+                                    // Adiciona o like e remove o dislike, se existir
+                                    ratingRef.update(movieId.toString(), mapOf(
+                                        "categoria" to "movie",
+                                        "likes" to FieldValue.increment(1),
+                                        "dislikes" to if (currentDislikes > 0) FieldValue.increment(-1) else 0
+                                    )).addOnSuccessListener {
+                                        isLikeImageView.setImageResource(R.drawable.liked)
+                                        if (currentDislikes > 0) {
+                                            isDislikeImageView.setImageResource(R.drawable.dislike)
+                                        }
+                                    }
+                                }
+                            }
+                            "dislike" -> {
+                                if (currentDislikes > 0) {
+                                    // Remove o dislike
+                                    ratingRef.update(movieId.toString(), mapOf(
+                                        "dislikes" to FieldValue.increment(-1)
+                                    )).addOnSuccessListener {
+                                        isDislikeImageView.setImageResource(R.drawable.dislike)
+                                    }
+                                } else {
+                                    // Adiciona o dislike e remove o like, se existir
+                                    ratingRef.update(movieId.toString(), mapOf(
+                                        "categoria" to "movie",
+                                        "dislikes" to FieldValue.increment(1),
+                                        "likes" to if (currentLikes > 0) FieldValue.increment(-1) else 0
+                                    )).addOnSuccessListener {
+                                        isDislikeImageView.setImageResource(R.drawable.disliked)
+                                        if (currentLikes > 0) {
+                                            isLikeImageView.setImageResource(R.drawable.like)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // Adiciona o filme à lista de favoritos com o like ou dislike inicial
+                        val initialLike = if (action == "like") 1 else 0
+                        val initialDislike = if (action == "dislike") 1 else 0
+                        ratingRef.set(mapOf(
+                            movieId.toString() to mapOf(
+                                "categoria" to "movie",
+                                "likes" to initialLike,
+                                "dislikes" to initialDislike
+                            )
+                        ), SetOptions.merge()).addOnSuccessListener {
+                            if (action == "like") {
+                                isLikeImageView.setImageResource(R.drawable.liked)
+                            } else {
+                                isDislikeImageView.setImageResource(R.drawable.disliked)
+                            }
+                        }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e(TAG, "Erro ao atualizar status de like/dislike", e)
+                    Toast.makeText(this@MovieDetailActivity, "Erro ao atualizar status de like/dislike", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+    private suspend fun checkIfLike(movieId: Int): Boolean {
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            val favoritesRef = Firebase.firestore.collection("rating").document(user.uid)
+            return try {
+                val document = favoritesRef.get().await()
+                if (document.exists()) {
+                    val favorites = document.data ?: return false
+                    val movieData = favorites?.get(movieId.toString()) as? Map<String, Any>
+                    val movieCategory = movieData?.get("categoria") as? String
+                    val movieLike = movieData?.get("likes") as? Long ?: 0
+
+                    return movieCategory.equals("movie") && (movieLike > 0)
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Erro ao verificar likes", e)
+                false
+            }
+        }
+        return false
+    }
+
+    private suspend fun checkIfDislike(movieId: Int): Boolean {
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            val favoritesRef = Firebase.firestore.collection("rating").document(user.uid)
+            return try {
+                val document = favoritesRef.get().await()
+                if (document.exists()) {
+                    val favorites = document.data ?: return false
+                    val movieData = favorites?.get(movieId.toString()) as? Map<String, Any>
+                    val movieCategory = movieData?.get("categoria") as? String
+                    val movieDislike = movieData?.get("dislikes") as? Long ?: 0
+
+                    return movieCategory.equals("movie") && (movieDislike > 0)
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Erro ao verificar dislikes", e)
+                false
+            }
+        }
+        return false
+    }
 }

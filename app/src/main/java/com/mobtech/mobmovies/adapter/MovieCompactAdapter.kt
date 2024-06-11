@@ -34,6 +34,9 @@ class MovieCompactAdapter(private val personData: List<MovieCredit>, private val
                     .into(imageView)
             }
 
+            val rating: TextView = view.findViewById(R.id.avalicao_item)
+            rating.text = "${(movie.vote_average * 10).toInt()}%"
+
             titleTextView.text = movie.title
             linearLayout.addView(view)
 

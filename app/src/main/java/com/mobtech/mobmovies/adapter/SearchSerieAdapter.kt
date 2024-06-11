@@ -37,6 +37,9 @@ class SearchSerieAdapter(private val series: List<Serie>, private val context: C
             }
             titleTextView.text = serie.name
 
+            val rating: TextView = view.findViewById(R.id.avalicao_item)
+            rating.text = "${(serie.vote_average * 10).toInt()}%"
+
             val params = GridLayout.LayoutParams().apply {
                 columnSpec = GridLayout.spec(index % 2)
                 rowSpec = GridLayout.spec(index / 2)

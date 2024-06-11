@@ -22,6 +22,7 @@ class SerieAdapter(private val series: List<Serie>, private val context: Context
             val view = inflater.inflate(R.layout.item_card, linearLayout, false)
             val imageView: ImageView = view.findViewById(R.id.image_post)
             val titleTextView: TextView = view.findViewById(R.id.title_template)
+            val rating: TextView = view.findViewById(R.id.avalicao_item)
 
             if(serie.poster_path != null) {
                 Glide.with(context)
@@ -32,7 +33,9 @@ class SerieAdapter(private val series: List<Serie>, private val context: Context
                     .load("https://www.movienewz.com/img/films/poster-holder.jpg")
                     .into(imageView)
             }
+
             titleTextView.text = serie.name
+            rating.text = "${(serie.vote_average * 10).toInt()}%"
             linearLayout.addView(view)
 
             view.setOnClickListener {

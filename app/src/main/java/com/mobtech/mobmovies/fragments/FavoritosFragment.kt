@@ -84,7 +84,8 @@ class FavoritosFragment : Fragment() {
                                 key.toInt(),
                                 it["categoria"] as? String ?: "",
                                 it["poster_path"] as? String ?: "",
-                                it["nome"] as? String ?: ""
+                                    it["nome"] as? String ?: "",
+                                it["vote_average"] as? Double ?: 0.0
                             )
                             favoritesList.add(favorite)
                         }
@@ -122,7 +123,8 @@ class FavoritosFragment : Fragment() {
                                     key.toInt(),
                                     it["categoria"] as? String ?: "",
                                     it["poster_path"] as? String ?: "",
-                                    it["nome"] as? String ?: ""
+                                    it["nome"] as? String ?: "",
+                                    it["vote_average"] as? Double ?: 0.0
                                 )
                                 if (favorite.nome.contains(query, ignoreCase = true)) {
                                     favoritesList.add(favorite)

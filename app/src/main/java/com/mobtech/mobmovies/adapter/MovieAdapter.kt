@@ -25,6 +25,7 @@ class MovieAdapter(private val movies: List<Movie>, private val context: Context
 
             val imageView: ImageView = view.findViewById(R.id.image_post)
             val titleTextView: TextView = view.findViewById(R.id.title_template)
+            val rating: TextView = view.findViewById(R.id.avalicao_item)
             if(movie.poster_path != null) {
                 Glide.with(context)
                     .load("https://image.tmdb.org/t/p/w500${movie.poster_path}")
@@ -36,6 +37,8 @@ class MovieAdapter(private val movies: List<Movie>, private val context: Context
             }
 
             titleTextView.text = movie.title
+            rating.text = "${(movie.vote_average * 10).toInt()}%"
+
             linearLayout.addView(view)
 
             view.setOnClickListener {

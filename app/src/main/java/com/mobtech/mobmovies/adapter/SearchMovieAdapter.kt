@@ -45,6 +45,9 @@ class SearchMovieAdapter(private val movies: List<Movie>, private val context: C
                 setMargins(10, 10, 10, 10)
             }
 
+            val rating: TextView = view.findViewById(R.id.avalicao_item)
+            rating.text = "${(movie.vote_average * 10).toInt()}%"
+
             gridLayout.addView(view, params)
 
             view.setOnClickListener {

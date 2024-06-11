@@ -34,6 +34,8 @@ class SerieCompactAdapter(private val personTVData: List<TVCredit>, private val 
                     .into(imageView)
             }
 
+            val rating: TextView = view.findViewById(R.id.avalicao_item)
+            rating.text = "${(serie.vote_average * 10).toInt()}%"
             titleTextView.text = serie.name
             linearLayout.addView(view)
 

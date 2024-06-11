@@ -30,6 +30,7 @@ class FavoriteAdapter(private val favcrites: List<Favorite>, private val context
             val view = inflater.inflate(R.layout.card_search, gridLayout, false)
             val imageView: ImageView = view.findViewById(R.id.image_post)
             val titleTextView: TextView = view.findViewById(R.id.title_template)
+            val rating: TextView = view.findViewById(R.id.avalicao_item)
             if(favorite.poster_path != null) {
                 Glide.with(context)
                     .load("https://image.tmdb.org/t/p/w500${favorite.poster_path}")
@@ -40,6 +41,7 @@ class FavoriteAdapter(private val favcrites: List<Favorite>, private val context
                     .into(imageView)
             }
             titleTextView.text = favorite.nome
+            rating.text = "${(favorite.vote_average * 10).toInt()}%"
 
             val params = GridLayout.LayoutParams().apply {
                 columnSpec = GridLayout.spec(index % 2)

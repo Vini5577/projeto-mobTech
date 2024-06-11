@@ -12,7 +12,9 @@ data class SerieDetails (
     val number_of_episodes: Int,
     val number_of_seasons: Int,
     val last_episode_to_air: Episode?,
-    val next_episode_to_air: Episode?
+    val next_episode_to_air: Episode?,
+    val vote_count: Int,
+    val vote_average: Double,
 )
 
 data class GenreTv(
