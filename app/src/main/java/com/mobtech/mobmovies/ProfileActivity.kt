@@ -89,12 +89,6 @@ class ProfileActivity : AppCompatActivity() {
             finish()
         })
 
-        btnChangeEmail.setOnClickListener({
-            val intent = Intent(applicationContext, ChangeEmailActivity::class.java)
-            startActivity(intent)
-            finish()
-        })
-
         btnChangePassword.setOnClickListener({
             val intent = Intent(applicationContext, ChangePasswordActivity::class.java)
             startActivity(intent)
