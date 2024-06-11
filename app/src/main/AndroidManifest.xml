@@ -15,6 +15,9 @@
         android:theme="@style/Theme.MobMovies"
         tools:targetApi="31">
         <activity
+            android:name=".ChangeEmailActivity"
+            android:exported="false" />
+        <activity
             android:name=".adapter.ChangePasswordActivity"
             android:exported="false" />
         <activity
