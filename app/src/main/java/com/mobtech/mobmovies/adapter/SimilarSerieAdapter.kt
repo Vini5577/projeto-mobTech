@@ -36,8 +36,6 @@ class SimilarSerieAdapter (private val series: List<Serie>, private val context:
                     .into(imageView)
             }
 
-            Log.e("OPAAA", "CHEGUEI AQUIIIII")
-
             titleTextView.text = serie.name
             linearLayout.addView(view)
 

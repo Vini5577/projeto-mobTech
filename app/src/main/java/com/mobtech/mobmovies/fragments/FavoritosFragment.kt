@@ -3,13 +3,22 @@ package com.mobtech.mobmovies.fragments
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
+import com.mobtech.mobmovies.MovieDetailActivity
 import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.SearchActivity
+import com.mobtech.mobmovies.adapter.FavoriteAdapter
+import com.mobtech.mobmovies.data.Favorite
 import com.mobtech.mobmovies.databinding.ActivityMainBinding
 import com.mobtech.mobmovies.databinding.FragmentFavoritosBinding
 
@@ -38,6 +47,8 @@ class FavoritosFragment : Fragment() {
         binding = FragmentFavoritosBinding.inflate(layoutInflater);
         val view = binding.root
 
+
+
         val inputText: EditText = view.findViewById(R.id.busca_favoritos)
 
         val listener = View.OnClickListener {
@@ -62,25 +73,50 @@ class FavoritosFragment : Fragment() {
 
         inputText.setOnClickListener(listener)
 
+        getFavorites()
+
         return view;
     }
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FavoritosFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FavoritosFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
+    private fun getFavorites() {
+        val user = FirebaseAuth.getInstance().currentUser
+
+        val gridLayout = binding.layoutResults
+        if (user != null) {
+            val favoritesRef = FirebaseFirestore.getInstance().collection("favorites").document(user.uid)
+            favoritesRef.get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val favoritesMap = document.data
+                        val favoritesList = mutableListOf<Favorite>()
+                        favoritesMap?.keys?.forEach { key ->
+                            val favoriteData = favoritesMap[key] as? Map<String, Any>
+                            favoriteData?.let {
+                                val favorite = Favorite(
+                                    key.toInt(),
+                                    it["categoria"] as? String ?: "",
+                                    it["poster_path"] as? String ?: "",
+                                    it["nome"] as? String ?: ""
+                                )
+                                favoritesList.add(favorite)
+                            }
+                        }
+                        // Atualiza a GridLayout com os favoritos obtidos
+                        val adapter = FavoriteAdapter(favoritesList, requireContext(), object : FavoriteAdapter.OnItemClickListener {
+                            override fun onItemClick(id: Int) {
+
+                            }
+                        })
+                        adapter.bindView(gridLayout, favoritesList)
+                    } else {
+                        Log.d("CHECK RESPONSE", "Nenhum favorito encontrado")
+                    }
                 }
-            }
+                .addOnFailureListener { e ->
+                    Log.e("CHECK RESPONSE", "Erro ao obter favoritos", e)
+                }
+        }
     }
 }
+
+

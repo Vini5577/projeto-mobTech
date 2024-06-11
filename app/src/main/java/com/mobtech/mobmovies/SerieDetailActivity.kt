@@ -4,8 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.firestore
 import com.mobtech.mobmovies.adapter.SerieCastAdapter
 import com.mobtech.mobmovies.adapter.SerieProviderAdapter
 import com.mobtech.mobmovies.adapter.SimilarMovieAdapter
@@ -17,6 +25,8 @@ import com.mobtech.mobmovies.data.SerieProvider
 import com.mobtech.mobmovies.data.SerieResponse
 import com.mobtech.mobmovies.databinding.ActivitySerieDetailBinding
 import com.mobtech.mobmovies.service.SerieApiService
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,10 +47,16 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
     private lateinit var api: SerieApiService
     private val TAG: String = "CHECK_RESPONSE"
 
+    private lateinit var isFavoriteImageView: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySerieDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseApp.initializeApp(this)
+        }
 
         val serieId = intent.getIntExtra("serieId", 0);
 
@@ -170,19 +186,100 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
         backButton.setOnClickListener({
             onBackPressed()
         })
+
+        isFavoriteImageView = binding.isFavorite
+
+        isFavoriteImageView.setOnClickListener({
+            if(isUserLoggedIn()) {
+                lifecycleScope.launch {
+                    val isFavorite: Boolean = checkIfFavorite(serieDetails.id);
+
+                    if(isFavorite) {
+                        removeFromFavorites(serieDetails.id)
+                    } else {
+                        addToFavorites(serieDetails.id, serieDetails)
+                    }
+                }
+            } else {
+                Toast.makeText(this@SerieDetailActivity, "Você precisa estar logado para favoritar esta série", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onItemClickPerson(personId: Int) {
-        Log.d(TAG, "Filme selecionado - ID: $personId")
         val intent = Intent(this, ActorActivity::class.java)
         intent.putExtra("personId", personId)
         startActivity(intent)
     }
 
     override fun onItemClick(serieId: Int) {
-        Log.d(TAG, "Filme selecionado - ID: $serieId")
         val intent = Intent(this, SerieDetailActivity::class.java)
         intent.putExtra("serieId", serieId)
         startActivity(intent)
     }
+
+    private fun isUserLoggedIn(): Boolean {
+        return Firebase.auth.currentUser != null
+    }
+
+    private fun addToFavorites(serieId: Int, serieDetails: SerieDetails) {
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            val favoritesRef = Firebase.firestore.collection("favorites").document(user.uid)
+            val favoriteData = mapOf(
+                serieId.toString() to mapOf(
+                    "poster_path" to serieDetails.poster_path,
+                    "nome" to serieDetails.name,
+                    "titulo" to "",
+                    "categoria" to "serie"
+                )
+            )
+            favoritesRef.set(favoriteData, SetOptions.merge())
+                .addOnSuccessListener {
+                    isFavoriteImageView.setImageResource(R.drawable.start_favorited)
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "Falha ao adicionar série aos favoritos", it)
+                    Toast.makeText(this@SerieDetailActivity, "Erro ao favoritar a série", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+    private fun removeFromFavorites(serieId: Int) {
+        isFavoriteImageView = binding.isFavorite
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            val favoritesRef = Firebase.firestore.collection("favorites").document(user.uid)
+            favoritesRef.update(serieId.toString(), FieldValue.delete())
+                .addOnSuccessListener {
+
+                    isFavoriteImageView.setImageResource(R.drawable.star_favorite)
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "Falha ao obter detalhes da série")
+                    Toast.makeText(this@SerieDetailActivity, "Você precisa estar logado para favoritar esta série", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+    private suspend fun checkIfFavorite(serieId: Int): Boolean {
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            val favoritesRef = Firebase.firestore.collection("favorites").document(user.uid)
+            return try {
+                val document = favoritesRef.get().await()
+                if (document.exists()) {
+                    val favorites = document.data ?: return false
+                    favorites.containsKey(serieId.toString())
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Erro ao verificar favoritos", e)
+                false
+            }
+        }
+        return false
+    }
+
 }
