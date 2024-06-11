@@ -50,14 +50,12 @@
         android:layout_marginVertical="17sp"
         android:gravity="center"
         android:rotationX="1"
-        android:text="Maria"
         android:textColor="#80FFFFFF" />
 
     <TextView
         android:id="@+id/email_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="eduarda@gmail.com"
         android:textAlignment="center"
         android:textColor="#80FFFFFF" />
 
