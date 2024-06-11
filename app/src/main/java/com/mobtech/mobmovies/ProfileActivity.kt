@@ -23,10 +23,6 @@ import kotlin.system.exitProcess
 
 class ProfileActivity : AppCompatActivity() {
 
-    private lateinit var tabLayout: TabLayout
-    private lateinit var viewPager: ViewPager2
-    private lateinit var adapter: FragmentPageAdapter
-    private lateinit var icon: ImageView
     private lateinit var btnFavorite: TextView
     private lateinit var btnChangeEmail: TextView
     private lateinit var btnChangePassword: TextView
@@ -38,6 +34,13 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            val intent = Intent(applicationContext, LoginActivity::class.java);
+            startActivity(intent)
+            finish()
+        }
     }
 
 
@@ -87,7 +90,7 @@ class ProfileActivity : AppCompatActivity() {
         })
 
         btnChangeEmail.setOnClickListener({
-            val intent = Intent(applicationContext, MainActivity::class.java)
+            val intent = Intent(applicationContext, ChangeEmailActivity::class.java)
             startActivity(intent)
             finish()
         })

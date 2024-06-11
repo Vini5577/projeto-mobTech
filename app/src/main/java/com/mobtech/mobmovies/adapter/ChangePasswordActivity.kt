@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.mobtech.mobmovies.LoginActivity
+import com.mobtech.mobmovies.ProfileActivity
 import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.databinding.ActivityChangePasswordBinding
 
@@ -76,7 +77,7 @@ class ChangePasswordActivity : AppCompatActivity() {
         })
 
         backButton.setOnClickListener({
-            onBackPressed()
+            startActivity(Intent(this, ProfileActivity::class.java))
         })
     }
 }
