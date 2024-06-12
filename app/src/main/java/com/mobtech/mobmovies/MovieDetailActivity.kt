@@ -3,12 +3,13 @@ package com.mobtech.mobmovies
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
@@ -16,6 +17,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
+import com.mobtech.mobmovies.adapter.CommentAdapter
 import com.mobtech.mobmovies.adapter.MovieAdapter
 import com.mobtech.mobmovies.adapter.MovieCastAdapter
 import com.mobtech.mobmovies.adapter.MovieProviderAdapter
@@ -25,7 +27,6 @@ import com.mobtech.mobmovies.data.MovieCast
 import com.mobtech.mobmovies.data.MovieDetails
 import com.mobtech.mobmovies.data.MovieProvider
 import com.mobtech.mobmovies.data.MovieResponse
-import com.mobtech.mobmovies.data.SerieDetails
 import com.mobtech.mobmovies.databinding.ActivityMovieDetailBinding
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -37,7 +38,6 @@ import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.math.log
 
 class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListener, MovieCastAdapter.OnItemClickListener {
 
@@ -57,8 +57,18 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         binding = ActivityMovieDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val recyclerView: RecyclerView = findViewById(R.id.commentary_box)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val contentId = intent.getIntExtra("movieId", 0)
+        val contentType = "movie"
+
+        fetchComments(contentId, contentType) { comments ->
+            val adapter = CommentAdapter(comments)
+            commentaryRecyclerView.adapter = adapter
+        }
+
         val movieId = intent.getIntExtra("movieId", 0);
-        Log.e(TAG, "Teste: $movieId")
 
         val btnCommentary = findViewById<TextView>(R.id.btn_commetary)
         btnCommentary.setOnClickListener {
@@ -300,6 +310,24 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             }
         }
         return false
+    }
+
+    private fun fetchComments(contentId: Int, contentType: String, callback: (List<Comment>) -> Unit) {
+        val db = Firebase.firestore
+        db.collection("comentarios")
+            .whereEqualTo("contentId", contentId)
+            .whereEqualTo("contentType", contentType)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val comments = querySnapshot.documents.mapNotNull { document ->
+                    document.toObject(Comment::class.java)
+                }
+                callback(comments)
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Erro ao buscar comentários: ", exception)
+                callback(emptyList())
+            }
     }
 
 }
