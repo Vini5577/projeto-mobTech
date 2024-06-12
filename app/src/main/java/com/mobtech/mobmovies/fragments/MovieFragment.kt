@@ -175,35 +175,42 @@ class MovieFragment : Fragment(), MovieAdapter.OnItemClickListener {
                 if (response.isSuccessful) {
                     val recommendations = response.body()?.results
                     if (recommendations != null && recommendations.isNotEmpty()) {
-                        val randomMovie = recommendations.random()
 
+                        val randomMovie = recommendations.random()
+                        val rating = (randomMovie.vote_average * 10).toInt()
                         val recomendacaoFilme = view.findViewById<ShapeableImageView>(R.id.recomendacao_filme)
                         val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto)
                         val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao)
                         val movieRecomendation = view.findViewById<FrameLayout>(R.id.movie_recomendation)
 
-                        if(TextUtils.isEmpty(randomMovie.poster_path)) {
-                            Glide.with(requireContext())
-                                .load("https://www.movienewz.com/img/films/poster-holder.jpg")
-                                .into(recomendacaoFilme)
-                        } else {
-                            Glide.with(requireContext())
-                                .load("https://image.tmdb.org/t/p/w500${randomMovie.poster_path}")
-                                .into(recomendacaoFilme)
+                        if(rating > 60) {
+                            if (TextUtils.isEmpty(randomMovie.poster_path)) {
+                                Glide.with(requireContext())
+                                    .load("https://www.movienewz.com/img/films/poster-holder.jpg")
+                                    .into(recomendacaoFilme)
+                            } else {
+                                Glide.with(requireContext())
+                                    .load("https://image.tmdb.org/t/p/w500${randomMovie.poster_path}")
+                                    .into(recomendacaoFilme)
+                            }
+
+                            movieRecomendation.setOnClickListener {
+                                val intent =
+                                    Intent(requireContext(), MovieDetailActivity::class.java)
+                                intent.putExtra("movieId", randomMovie.id)
+                                startActivity(intent)
+                            }
                         }
 
-                        movieRecomendation.setOnClickListener {
-                            val intent = Intent(requireContext(), MovieDetailActivity::class.java)
-                            intent.putExtra("movieId", randomMovie.id)
-                            startActivity(intent)
-                        }
 
                         recomendacaoTexto.text = randomMovie.title
-                        recomendacaoAvaliacao.text = "${(randomMovie.vote_average * 10).toInt()}%"
+                        recomendacaoAvaliacao.text = "${rating}%"
                     } else {
                         Log.d(TAG, "Lista de recomendações vazia, fazendo nova requisição")
                         loadRecommendations()
                     }
+                } else {
+                    loadRecommendations()
                 }
             }
 

@@ -3,6 +3,7 @@ package com.mobtech.mobmovies.fragments
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -65,7 +66,6 @@ class SeriesFragment : Fragment(),SerieAdapter.OnItemClickListener {
         val view = binding.root
 
 
-       // val view = inflater.inflate(R.layout.fragment_series, container, false)
         val trendingLayout = view.findViewById<LinearLayout>(R.id.trending_layout_serie)
 
         api.getTrendingSeries("pt-BR", API_KEY).enqueue(object : Callback<SerieResponse>{
@@ -156,27 +156,39 @@ class SeriesFragment : Fragment(),SerieAdapter.OnItemClickListener {
                     if (recommendations != null && recommendations.isNotEmpty()) {
                         val randomSerie = recommendations.random()
 
-                        val recomendacaoSerie =
-                            view.findViewById<ShapeableImageView>(R.id.recomendacao_serie)
+                        val recomendacaoSerie = view.findViewById<ShapeableImageView>(R.id.recomendacao_serie)
                         val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto_serie)
                         val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao_serie)
                         val serieRecomendation = view.findViewById<FrameLayout>(R.id.serie_recomendation)
+                        val rating = (randomSerie.vote_average * 10).toInt()
 
-                        Glide.with(requireContext())
-                            .load("https://image.tmdb.org/t/p/w500${randomSerie.poster_path}")
-                            .into(recomendacaoSerie)
+                        if(rating > 60) {
+                            if (TextUtils.isEmpty(randomSerie.poster_path)) {
+                                Glide.with(requireContext())
+                                    .load("https://www.movienewz.com/img/films/poster-holder.jpg")
+                                    .into(recomendacaoSerie)
+                            } else {
+                                Glide.with(requireContext())
+                                    .load("https://image.tmdb.org/t/p/w500${randomSerie.poster_path}")
+                                    .into(recomendacaoSerie)
+                            }
+                            serieRecomendation.setOnClickListener {
+                                val intent = Intent(requireContext(), SerieDetailActivity::class.java)
+                                intent.putExtra("serieId", randomSerie.id)
+                                startActivity(intent)
+                            }
 
-                        serieRecomendation.setOnClickListener {
-                            val intent = Intent(requireContext(), SerieDetailActivity::class.java)
-                            intent.putExtra("serieId", randomSerie.id)
-                            startActivity(intent)
+                            recomendacaoTexto.text = randomSerie.name
+                            recomendacaoAvaliacao.text = "${rating}%"
+                        } else {
+                            loadRecommendations()
                         }
-
-                        recomendacaoTexto.text = randomSerie.name
-                        recomendacaoAvaliacao.text = "${(randomSerie.vote_average * 10).toInt()}%"
                     } else {
                         Log.d(TAG, "Lista de recomendações vazia")
+                        loadRecommendations()
                     }
+                } else {
+                    loadRecommendations()
                 }
             }
 

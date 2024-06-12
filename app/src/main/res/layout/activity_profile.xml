@@ -73,7 +73,7 @@
         android:textSize="16dp" />
 
     <TextView
-        android:id="@+id/btn_change_email"
+        android:id="@+id/btn_change_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20sp"

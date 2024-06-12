@@ -3,28 +3,18 @@ package com.mobtech.mobmovies
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.databinding.DataBindingUtil
 
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mobtech.mobmovies.adapter.ChangePasswordActivity
-import com.mobtech.mobmovies.databinding.ActivityLoginBinding
 
 import com.mobtech.mobmovies.databinding.ActivityProfileBinding
-import kotlin.system.exitProcess
 
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var btnFavorite: TextView
-    private lateinit var btnChangeEmail: TextView
     private lateinit var btnChangePassword: TextView
     private lateinit var btnExit: TextView
     private lateinit var btnBackButton: ImageView
@@ -72,7 +62,6 @@ class ProfileActivity : AppCompatActivity() {
 
         btnBackButton = binding.backButton
         btnFavorite = binding.btnFavorite
-        btnChangeEmail = binding.btnChangeEmail
         btnChangePassword = binding.btnChangePassword
         btnExit = binding.btnExit
 
