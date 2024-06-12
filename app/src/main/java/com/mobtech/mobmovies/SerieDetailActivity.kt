@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -54,11 +55,20 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
         binding = ActivitySerieDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val serieId = intent.getIntExtra("serieId", 0);
+
+        val btnCommentary = findViewById<TextView>(R.id.btn_commetary)
+        btnCommentary.setOnClickListener {
+            val intent = Intent(this, CommentActivity::class.java).apply {
+                putExtra("CONTENT_ID", serieId.toString())
+                putExtra("CONTENT_TYPE", "serie")
+            }
+            startActivity(intent)
+        }
+
         if (FirebaseApp.getApps(this).isEmpty()) {
             FirebaseApp.initializeApp(this)
         }
-
-        val serieId = intent.getIntExtra("serieId", 0);
 
         api = Retrofit.Builder()
             .baseUrl(BASE_URL)

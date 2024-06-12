@@ -3,7 +3,9 @@ package com.mobtech.mobmovies
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -55,11 +57,21 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         binding = ActivityMovieDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val movieId = intent.getIntExtra("movieId", 0);
+        Log.e(TAG, "Teste: $movieId")
+
+        val btnCommentary = findViewById<TextView>(R.id.btn_commetary)
+        btnCommentary.setOnClickListener {
+            val intent = Intent(this, CommentActivity::class.java).apply {
+                putExtra("CONTENT_ID", movieId.toString())
+                putExtra("CONTENT_TYPE", "movie")
+            }
+            startActivity(intent)
+        }
+
         if (FirebaseApp.getApps(this).isEmpty()) {
             FirebaseApp.initializeApp(this)
         }
-
-        val movieId = intent.getIntExtra("movieId", 0);
 
         api = Retrofit.Builder()
             .baseUrl(BASE_URL)
