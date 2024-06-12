@@ -2,6 +2,7 @@ package com.mobtech.mobmovies.fragments
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -15,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
+import com.mobtech.mobmovies.ColorRating
 import com.mobtech.mobmovies.MovieDetailActivity
 import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.SearchActivity
@@ -161,6 +163,7 @@ class SeriesFragment : Fragment(),SerieAdapter.OnItemClickListener {
                         val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao_serie)
                         val serieRecomendation = view.findViewById<FrameLayout>(R.id.serie_recomendation)
                         val rating = (randomSerie.vote_average * 10).toInt()
+                        val border: LinearLayout = view.findViewById(R.id.border)
 
                         if(rating > 60) {
                             if (TextUtils.isEmpty(randomSerie.poster_path)) {
@@ -180,11 +183,17 @@ class SeriesFragment : Fragment(),SerieAdapter.OnItemClickListener {
 
                             recomendacaoTexto.text = randomSerie.name
                             recomendacaoAvaliacao.text = "${rating}%"
+
+                            val color = ColorRating().getColorForRating(rating)
+                            val background = GradientDrawable()
+                            background.shape = GradientDrawable.OVAL
+                            background.setColor(android.graphics.Color.parseColor("#4DDADADA"))
+                            background.setStroke(2, color)
+                            border.background = background
                         } else {
                             loadRecommendations()
                         }
                     } else {
-                        Log.d(TAG, "Lista de recomendações vazia")
                         loadRecommendations()
                     }
                 } else {

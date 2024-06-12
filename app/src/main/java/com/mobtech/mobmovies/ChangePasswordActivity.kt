@@ -1,19 +1,12 @@
-package com.mobtech.mobmovies.adapter
+package com.mobtech.mobmovies
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.mobtech.mobmovies.LoginActivity
-import com.mobtech.mobmovies.ProfileActivity
-import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.databinding.ActivityChangePasswordBinding
 
 class ChangePasswordActivity : AppCompatActivity() {

@@ -8,7 +8,6 @@ import android.widget.TextView
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mobtech.mobmovies.adapter.ChangePasswordActivity
 
 import com.mobtech.mobmovies.databinding.ActivityProfileBinding
 

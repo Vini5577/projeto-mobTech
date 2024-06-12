@@ -3,13 +3,16 @@ package com.mobtech.mobmovies.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.mobtech.mobmovies.ColorRating
 import com.mobtech.mobmovies.MovieDetailActivity
 import com.mobtech.mobmovies.R
 import com.mobtech.mobmovies.SerieDetailActivity
@@ -31,6 +34,8 @@ class FavoriteAdapter(private val favcrites: List<Favorite>, private val context
             val imageView: ImageView = view.findViewById(R.id.image_post)
             val titleTextView: TextView = view.findViewById(R.id.title_template)
             val rating: TextView = view.findViewById(R.id.avalicao_item)
+            val border: LinearLayout = view.findViewById(R.id.border)
+
             if(favorite.poster_path != null) {
                 Glide.with(context)
                     .load("https://image.tmdb.org/t/p/w500${favorite.poster_path}")
@@ -42,6 +47,13 @@ class FavoriteAdapter(private val favcrites: List<Favorite>, private val context
             }
             titleTextView.text = favorite.nome
             rating.text = "${(favorite.vote_average * 10).toInt()}%"
+
+            val color = ColorRating().getColorForRating((favorite.vote_average * 10).toInt())
+            val background = GradientDrawable()
+            background.shape = GradientDrawable.OVAL
+            background.setColor(android.graphics.Color.parseColor("#4DDADADA"))
+            background.setStroke(2, color)
+            border.background = background
 
             val params = GridLayout.LayoutParams().apply {
                 columnSpec = GridLayout.spec(index % 2)

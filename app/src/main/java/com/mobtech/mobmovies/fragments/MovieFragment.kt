@@ -3,6 +3,7 @@ package com.mobtech.mobmovies.fragments
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -17,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
+import com.mobtech.mobmovies.ColorRating
 import com.mobtech.mobmovies.MovieDetailActivity
 import com.mobtech.mobmovies.data.MovieResponse
 import com.mobtech.mobmovies.R
@@ -182,6 +184,7 @@ class MovieFragment : Fragment(), MovieAdapter.OnItemClickListener {
                         val recomendacaoTexto = view.findViewById<TextView>(R.id.recomendacao_texto)
                         val recomendacaoAvaliacao = view.findViewById<TextView>(R.id.recomendacao_avaliacao)
                         val movieRecomendation = view.findViewById<FrameLayout>(R.id.movie_recomendation)
+                        val border: LinearLayout = view.findViewById(R.id.border)
 
                         if(rating > 60) {
                             if (TextUtils.isEmpty(randomMovie.poster_path)) {
@@ -194,17 +197,25 @@ class MovieFragment : Fragment(), MovieAdapter.OnItemClickListener {
                                     .into(recomendacaoFilme)
                             }
 
+                            recomendacaoTexto.text = randomMovie.title
+                            recomendacaoAvaliacao.text = "${rating}%"
+
+                            val color = ColorRating().getColorForRating(rating)
+                            val background = GradientDrawable()
+                            background.shape = GradientDrawable.OVAL
+                            background.setColor(android.graphics.Color.parseColor("#4DDADADA"))
+                            background.setStroke(2, color)
+                            border.background = background
+
                             movieRecomendation.setOnClickListener {
                                 val intent =
                                     Intent(requireContext(), MovieDetailActivity::class.java)
                                 intent.putExtra("movieId", randomMovie.id)
                                 startActivity(intent)
                             }
+                        } else {
+                            loadRecommendations()
                         }
-
-
-                        recomendacaoTexto.text = randomMovie.title
-                        recomendacaoAvaliacao.text = "${rating}%"
                     } else {
                         Log.d(TAG, "Lista de recomendações vazia, fazendo nova requisição")
                         loadRecommendations()

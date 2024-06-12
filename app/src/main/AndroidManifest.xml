@@ -18,7 +18,7 @@
             android:name=".ChangeEmailActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.ChangePasswordActivity"
+            android:name=".ChangePasswordActivity"
             android:exported="false" />
         <activity
             android:name=".SerieDetailActivity"
