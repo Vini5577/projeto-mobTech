@@ -383,21 +383,21 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                     return@addSnapshotListener
                 }
 
-                if (snapshot != null) {
-                    val comments = mutableListOf<Comment>()
-                    snapshot?.forEach { document ->
-                        val username = document.getString("username")
-                        val comentario = document.getString("comentario")
-                        val dataHora = document.get("data_hora")
+                val comments = mutableListOf<Comment>()
+                snapshot?.forEach { document ->
+                    val username = document.getString("username")
+                    val comentario = document.getString("comentario")
+                    val dataHora = document.get("data_hora")
 
-                        if (username != null && comentario != null && dataHora != null) {
-                            comments.add(Comment(username, comentario, dataHora))
-                        }
+                    if (username != null && comentario != null && dataHora != null) {
+                        comments.add(Comment(username, comentario, dataHora))
                     }
-                    callback(comments)
                 }
+                Log.d("OLA MUNDO", "TESTANDO $comments")
+                callback(comments)
             }
     }
+
 
     private fun moreComments(movieId: Int, category: String) {
         val intent = Intent(this, MoreCommentsActivity::class.java).apply {
