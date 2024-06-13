@@ -7,16 +7,16 @@
     >
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardProvider"
         android:layout_width="68sp"
         android:layout_height="68sp"
-        app:cardCornerRadius="150dp"
-        android:layout_marginRight="20sp">
+        android:layout_marginRight="20sp"
+        app:cardCornerRadius="150dp">
 
         <ImageView
             android:id="@+id/img_provider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
     </androidx.cardview.widget.CardView>
 
