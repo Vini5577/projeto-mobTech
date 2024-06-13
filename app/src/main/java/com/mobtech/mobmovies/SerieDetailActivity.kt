@@ -463,6 +463,11 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
                     Log.e(TAG, "Erro ao atualizar status de like/dislike", e)
                     Toast.makeText(this@SerieDetailActivity, "Erro ao atualizar status de like/dislike", Toast.LENGTH_SHORT).show()
                 }
+        } else {
+            Toast.makeText(this@SerieDetailActivity,
+                "Você precisa estar logado para dar like ou dislike nesta série",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

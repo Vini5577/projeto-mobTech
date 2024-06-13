@@ -508,6 +508,12 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+            } else {
+                Toast.makeText(
+                    this@MovieDetailActivity,
+                    "Você precisa estar logado para dar like ou dislike neste filme.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 

@@ -81,7 +81,7 @@
         android:background="@drawable/button_template"
         android:gravity="center"
         android:paddingVertical="11sp"
-        android:text="Redifinir Email"
+        android:text="Redifinir Senha"
         android:textColor="@color/white"
         android:textSize="16dp" />
 
