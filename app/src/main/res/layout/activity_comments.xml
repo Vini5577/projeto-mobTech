@@ -49,6 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_margin="25dp"
+                    android:textColor="@color/white"
                     android:background="@drawable/comment_template"
                     android:gravity="start" />
             </com.google.android.material.textfield.TextInputLayout>

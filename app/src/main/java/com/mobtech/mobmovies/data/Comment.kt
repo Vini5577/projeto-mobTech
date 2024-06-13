@@ -1,11 +1,11 @@
 package com.mobtech.mobmovies
 
+import com.google.firebase.Timestamp
+
 data class Comment(
-    val commentId: String,
-    val username: String,
-    val comentario: String,
-    val dataHora: Long = 0L,
+    val username: String = "",
+    val comentario: String = "",
+    val data_hora: String = "",
     val contentId: Int = 0,
-    val contentType: String,
-    val userId: String,
+    val contentType: String = ""
 )

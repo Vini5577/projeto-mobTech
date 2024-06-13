@@ -1,36 +1,36 @@
 package com.mobtech.mobmovies.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mobtech.mobmovies.Comment
 import com.mobtech.mobmovies.R
 
-class CommentAdapter(private val comments: List<Comment>) :
-    RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
+class CommentAdapter(private val comments: List<Comment>, private val context: Context) {
 
-    class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val usernameTextView: TextView = itemView.findViewById(R.id.user)
-        val commentTextView: TextView = itemView.findViewById(R.id.commentary)
-        val dateTextView: TextView = itemView.findViewById(R.id.date)
-    }
+    fun bindView(linearLayout: LinearLayout) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.activity_movie_detail, parent, false)
-        return CommentViewHolder(itemView)
-    }
+        val inflater = LayoutInflater.from(context)
 
-    override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        val comment = comments[position]
-        holder.usernameTextView.text = comment.username
-        holder.commentTextView.text = comment.comentario
-        // formatar data depois
-    }
+        for (comment in comments) {
+            val view = inflater.inflate(R.layout.commetery_card, linearLayout, false)
 
-    override fun getItemCount(): Int {
-        return comments.size
+            val titleTextView: TextView = view.findViewById(R.id.user)
+            val dateComment: TextView = view.findViewById(R.id.date)
+            val commentary: TextView = view.findViewById(R.id.commentary)
+
+
+            titleTextView.text = comment.username
+            dateComment.text = comment.data_hora.toString()
+            commentary.text = comment.comentario
+
+            linearLayout.addView(view)
+        }
     }
 }

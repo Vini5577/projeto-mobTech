@@ -5,12 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CommentActivity : AppCompatActivity() {
 
@@ -25,6 +30,12 @@ class CommentActivity : AppCompatActivity() {
 
         val sendCommentButton: Button = findViewById(R.id.commentButton)
         commentEditText = findViewById(R.id.commentTextBox)
+
+        val backButton: ImageView = findViewById(R.id.backButton)
+
+        backButton.setOnClickListener({
+            onBackPressed()
+        })
 
         contentId = intent.getStringExtra("CONTENT_ID")?.toIntOrNull() ?: 0
         contentType = intent.getStringExtra("CONTENT_TYPE") ?: "movie"
@@ -56,6 +67,9 @@ class CommentActivity : AppCompatActivity() {
             return
         }
 
+        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        val formattedDate = sdf.format(Date())
+
         Firebase.firestore.collection("users")
             .whereEqualTo("email", userEmail)
             .get()
@@ -64,13 +78,12 @@ class CommentActivity : AppCompatActivity() {
                     val username = document.getString("username")
                     if (username != null) {
                         val comentariosRef = Firebase.firestore.collection("comentarios")
-                        val comentarioData = mapOf(
-                            "username" to username,
-                            "comentario" to commentText,
-                            "data_hora" to FieldValue.serverTimestamp(),
-                            "contentId" to contentId,
-                            "contentType" to contentType,
-                            "userId" to userId
+                        val comentarioData: Map<String, Any> = mapOf(
+                            "username" to username as String,
+                            "comentario" to commentText as String,
+                            "data_hora" to formattedDate as String,
+                            "contentId" to contentId.toInt(),
+                            "contentType" to contentType as String,
                         )
 
                         comentariosRef.add(comentarioData)

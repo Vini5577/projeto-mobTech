@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.mobtech.mobmovies.adapter.CommentAdapter
@@ -56,17 +59,6 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         super.onCreate(savedInstanceState)
         binding = ActivityMovieDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val recyclerView: RecyclerView = findViewById(R.id.commentary_box)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        val contentId = intent.getIntExtra("movieId", 0)
-        val contentType = "movie"
-
-        fetchComments(contentId, contentType) { comments ->
-            val adapter = CommentAdapter(comments)
-            commentaryRecyclerView.adapter = adapter
-        }
 
         val movieId = intent.getIntExtra("movieId", 0);
 
@@ -170,6 +162,8 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         backButton.setOnClickListener({
             onBackPressed()
         })
+
+        getComments(movieId)
     }
 
     private fun updateUI(movieDetails: MovieDetails?) {
@@ -202,7 +196,7 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             isFavoriteImageView = binding.isFavorite
 
             lifecycleScope.launch {
-                val isFavorite = checkIfFavorite(movieDetails.id, "movie")
+                val isFavorite = checkIfFavorite(movieDetails.id)
                 if (isFavorite) {
                     isFavoriteImageView.setImageResource(R.drawable.start_favorited)
                 } else {
@@ -213,7 +207,7 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             isFavoriteImageView.setOnClickListener({
                 if(isUserLoggedIn()) {
                     lifecycleScope.launch {
-                        val isFavorite: Boolean = checkIfFavorite(movieDetails.id, "movie");
+                        val isFavorite: Boolean = checkIfFavorite(movieDetails.id);
 
                         if(isFavorite) {
                             removeFromFavorites(movieDetails.id)
@@ -286,7 +280,7 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         }
     }
 
-    private suspend fun checkIfFavorite(movieId: Int, categoria: String): Boolean {
+    private suspend fun checkIfFavorite(movieId: Int): Boolean {
         val user = Firebase.auth.currentUser
         if (user != null) {
             val favoritesRef = Firebase.firestore.collection("favorites").document(user.uid)
@@ -312,22 +306,28 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         return false
     }
 
-    private fun fetchComments(contentId: Int, contentType: String, callback: (List<Comment>) -> Unit) {
-        val db = Firebase.firestore
-        db.collection("comentarios")
-            .whereEqualTo("contentId", contentId)
-            .whereEqualTo("contentType", contentType)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val comments = querySnapshot.documents.mapNotNull { document ->
-                    document.toObject(Comment::class.java)
-                }
-                callback(comments)
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Erro ao buscar comentários: ", exception)
-                callback(emptyList())
-            }
-    }
+    private fun getComments(movieId: Int) {
+        val commentRef = FirebaseFirestore.getInstance().collection("comentarios")
+        val query = commentRef
+            .whereEqualTo("contentId", movieId)
+            .whereEqualTo("contentType", "movie")
+            .orderBy("data_hora", Query.Direction.DESCENDING)
+            .limit(2)
 
+        query.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.e("CHECK RESPONSE", "Não foi possível obter os comentários", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val commentsList = snapshot.toObjects(Comment::class.java)
+                Log.e("CHECK RESPONSE", "Comentários obtidos: $commentsList")
+               val commentaryBox = binding.commentaryBox
+                commentaryBox.removeAllViews()
+                val commentAdapter = CommentAdapter(commentsList, this)
+                commentAdapter.bindView(commentaryBox)
+            }
+        }
+    }
 }
