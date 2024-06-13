@@ -1,5 +1,6 @@
 package com.mobtech.mobmovies
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
@@ -12,6 +13,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
     private lateinit var adapter: FragmentSearchAdapter
+    private lateinit var icon: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -48,6 +50,13 @@ class SearchActivity : AppCompatActivity() {
         imageView.setOnClickListener {
             finish()
         }
+
+        icon = findViewById(R.id.icon_profile_search)
+
+        icon.setOnClickListener({
+            val loginScreen = Intent(this, LoginActivity::class.java)
+            startActivity(loginScreen)
+        })
 
     }
 }
