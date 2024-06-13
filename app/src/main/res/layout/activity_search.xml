@@ -26,7 +26,7 @@
             android:src="@drawable/back_button" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/icon_profile_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="280sp"
