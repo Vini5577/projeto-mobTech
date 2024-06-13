@@ -164,7 +164,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_marginStart="5dp"
-                            android:text="90% gostaram do filme"
                             android:textColor="#BCBCBC" />
 
                     </LinearLayout>

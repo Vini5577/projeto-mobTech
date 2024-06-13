@@ -20,9 +20,7 @@ import com.google.firebase.firestore.firestore
 import com.mobtech.mobmovies.adapter.SerieCastAdapter
 import com.mobtech.mobmovies.adapter.CommentAdapter
 import com.mobtech.mobmovies.adapter.SerieProviderAdapter
-import com.mobtech.mobmovies.adapter.SimilarMovieAdapter
 import com.mobtech.mobmovies.adapter.SimilarSerieAdapter
-import com.mobtech.mobmovies.data.MovieResponse
 import com.mobtech.mobmovies.data.SerieCast
 import com.mobtech.mobmovies.data.SerieDetails
 import com.mobtech.mobmovies.data.SerieProvider
@@ -127,9 +125,9 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
 
             override fun onResponse(call: Call<SerieProvider>, response: Response<SerieProvider>) {
                 if (response.isSuccessful) {
-                    val movieProvider = response.body()?.results?.get("BR")
+                    val serieProvider = response.body()?.results?.get("BR")
 
-                    movieProvider?.let { providerData ->
+                    serieProvider?.let { providerData ->
                         val flatRateDataList = providerData.flatrate
                         val adapter = SerieProviderAdapter(flatRateDataList, this@SerieDetailActivity)
                         adapter.bindView(providerList)
@@ -146,14 +144,14 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
             }
         })
 
-        val similarMovies = binding.similarSerie
+        val similarSerie = binding.similarSerie
 
         api.getSimilarSerie(serieId, API_KEY, "pt-BR").enqueue(object: Callback<SerieResponse> {
             override fun onResponse(call: Call<SerieResponse>, response: Response<SerieResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { series ->
                         val adapter = SimilarSerieAdapter(series, this@SerieDetailActivity, this@SerieDetailActivity)
-                        adapter.bindView(similarMovies)
+                        adapter.bindView(similarSerie)
                     }
                 }
             }
@@ -174,29 +172,22 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
         })
     }
 
-    fun updateUI(serieDetails: SerieDetails) {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val releaseDate = dateFormat.parse(serieDetails?.first_air_date ?: "") ?: Date()
+    private fun updateUI(serieDetails: SerieDetails?) {
+        val isLikeImageView = binding.isLike
+        val isDislikeImageView = binding.isDislike
 
-        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(releaseDate)
+        serieDetails?.let {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val releaseDate = dateFormat.parse(serieDetails?.first_air_date ?: "") ?: Date()
 
-        val dateFormatLastDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val releaseDateLastDate = dateFormatLastDate.parse(serieDetails?.last_air_date ?: "") ?: Date()
+            val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(releaseDate)
 
-        val formattedDateLastDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(releaseDateLastDate)
+            val dateFormatLastDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val releaseDateLastDate = dateFormatLastDate.parse(serieDetails?.last_air_date ?: "") ?: Date()
 
-        val genres = serieDetails?.genres?.joinToString(", ") { it.name }
+            val formattedDateLastDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(releaseDateLastDate)
 
-       serieDetails?.let {
-            binding.SerieTitle.text = it.name
-            binding.serieSinopse.text = it.overview
-            binding.serieReleaseDate.text = formattedDate
-            val text: String = it.number_of_seasons?.toString() ?: ""
-            val seasonText = if (it.number_of_seasons != null && it.number_of_seasons > 1) " temporadas" else " temporada"
-            binding.SerieTime.text = text + seasonText
-            binding.serieCategories.text = genres
-            binding.serieEpisodeRunTime.text = it.number_of_episodes.toString()
-            binding.serieLastAirDate.text = formattedDateLastDate
+            val genres = serieDetails?.genres?.joinToString(", ") { it.name }
 
             if(serieDetails.poster_path != null) {
                 Glide.with(this)
@@ -208,14 +199,62 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
                     .into(binding.seriePoster)
             }
 
-           lifecycleScope.launch {
-               val isFavorite = checkIfFavorite(serieDetails.id, "serie")
-               if (isFavorite) {
-                   isFavoriteImageView.setImageResource(R.drawable.start_favorited)
-               } else {
-                   isFavoriteImageView.setImageResource(R.drawable.star_favorite)
-               }
-           }
+            binding.SerieTitle.text = it.name
+            binding.serieSinopse.text = it.overview
+            binding.serieReleaseDate.text = formattedDate
+            val text: String = it.number_of_seasons?.toString() ?: ""
+            val seasonText = if (it.number_of_seasons != null && it.number_of_seasons > 1) " temporadas" else " temporada"
+            binding.SerieTime.text = text + seasonText
+            binding.serieCategories.text = genres
+            binding.serieEpisodeRunTime.text = it.number_of_episodes.toString()
+            binding.serieLastAirDate.text = formattedDateLastDate
+
+            isFavoriteImageView = binding.isFavorite
+
+            lifecycleScope.launch {
+                val isFavorite = checkIfFavorite(serieDetails.id, "serie")
+                if (isFavorite) {
+                    isFavoriteImageView.setImageResource(R.drawable.start_favorited)
+                } else {
+                    isFavoriteImageView.setImageResource(R.drawable.star_favorite)
+                }
+
+                val isLike = checkIfLike(serieDetails.id)
+                if(isLike) {
+                    isLikeImageView.setImageResource(R.drawable.liked)
+                }
+
+                val isDislike = checkIfDislike(serieDetails.id)
+                if(isDislike) {
+                    isDislikeImageView.setImageResource(R.drawable.disliked)
+                }
+
+                binding.textAvaliation.text = "${(serieDetails.vote_average * 10).toInt()}% gostram do filme"
+            }
+
+            isFavoriteImageView.setOnClickListener({
+                if(isUserLoggedIn()) {
+                    lifecycleScope.launch {
+                        val isFavorite: Boolean = checkIfFavorite(serieDetails.id, "serie");
+
+                        if(isFavorite) {
+                            removeFromFavorites(serieDetails.id)
+                        } else {
+                            addToFavorites(serieDetails.id, serieDetails)
+                        }
+                    }
+                } else {
+                    Toast.makeText(this@SerieDetailActivity, "Você precisa estar logado para favoritar esta série", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+            isLikeImageView.setOnClickListener {
+                updateLikeStatus(serieDetails.id, "like")
+            }
+
+            isDislikeImageView.setOnClickListener {
+                updateLikeStatus(serieDetails.id, "dislike")
+            }
 
         }
 
@@ -223,24 +262,6 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
 
         backButton.setOnClickListener({
             onBackPressed()
-        })
-
-        isFavoriteImageView = binding.isFavorite
-
-        isFavoriteImageView.setOnClickListener({
-            if(isUserLoggedIn()) {
-                lifecycleScope.launch {
-                    val isFavorite: Boolean = checkIfFavorite(serieDetails.id, "serie");
-
-                    if(isFavorite) {
-                        removeFromFavorites(serieDetails.id)
-                    } else {
-                        addToFavorites(serieDetails.id, serieDetails)
-                    }
-                }
-            } else {
-                Toast.makeText(this@SerieDetailActivity, "Você precisa estar logado para favoritar esta série", Toast.LENGTH_SHORT).show()
-            }
         })
     }
 
@@ -269,7 +290,8 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
                     "poster_path" to serieDetails.poster_path,
                     "nome" to serieDetails.name,
                     "titulo" to "",
-                    "categoria" to "serie"
+                    "categoria" to "serie",
+                    "vote_average" to serieDetails.vote_average
                 )
             )
             favoritesRef.set(favoriteData, SetOptions.merge())
@@ -356,6 +378,138 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
             putExtra("CONTENT_TYPE", category)
         }
         startActivity(intent)
+    }
+    private fun updateLikeStatus(serieId: Int, action: String) {
+        val isLikeImageView = binding.isLike
+        val isDislikeImageView = binding.isDislike
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            val ratingRef = Firebase.firestore.collection("rating").document(user.uid)
+            ratingRef.get()
+                .addOnSuccessListener { document ->
+                    val serieData = document.data?.get(serieId.toString()) as? Map<String, Any>
+                    if (serieData != null && serieData["categoria"] == "serie") {
+                        val currentLikes = serieData["likes"] as? Long ?: 0
+                        val currentDislikes = serieData["dislikes"] as? Long ?: 0
+
+                        when (action) {
+                            "like" -> {
+                                if (currentLikes > 0) {
+                                    // Remove o like
+                                    ratingRef.update(serieId.toString(), mapOf(
+                                        "likes" to FieldValue.increment(-1)
+                                    )).addOnSuccessListener {
+                                        isLikeImageView.setImageResource(R.drawable.like)
+                                    }
+                                } else {
+                                    // Adiciona o like e remove o dislike, se existir
+                                    ratingRef.update(serieId.toString(), mapOf(
+                                        "categoria" to "serie",
+                                        "likes" to FieldValue.increment(1),
+                                        "dislikes" to if (currentDislikes > 0) FieldValue.increment(-1) else 0
+                                    )).addOnSuccessListener {
+                                        isLikeImageView.setImageResource(R.drawable.liked)
+                                        if (currentDislikes > 0) {
+                                            isDislikeImageView.setImageResource(R.drawable.dislike)
+                                        }
+                                    }
+                                }
+                            }
+                            "dislike" -> {
+                                if (currentDislikes > 0) {
+                                    // Remove o dislike
+                                    ratingRef.update(serieId.toString(), mapOf(
+                                        "dislikes" to FieldValue.increment(-1)
+                                    )).addOnSuccessListener {
+                                        isDislikeImageView.setImageResource(R.drawable.dislike)
+                                    }
+                                } else {
+                                    // Adiciona o dislike e remove o like, se existir
+                                    ratingRef.update(serieId.toString(), mapOf(
+                                        "categoria" to "serie",
+                                        "dislikes" to FieldValue.increment(1),
+                                        "likes" to if (currentLikes > 0) FieldValue.increment(-1) else 0
+                                    )).addOnSuccessListener {
+                                        isDislikeImageView.setImageResource(R.drawable.disliked)
+                                        if (currentLikes > 0) {
+                                            isLikeImageView.setImageResource(R.drawable.like)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // Adiciona o filme à lista de favoritos com o like ou dislike inicial
+                        val initialLike = if (action == "like") 1 else 0
+                        val initialDislike = if (action == "dislike") 1 else 0
+                        ratingRef.set(mapOf(
+                            serieId.toString() to mapOf(
+                                "categoria" to "serie",
+                                "likes" to initialLike,
+                                "dislikes" to initialDislike
+                            )
+                        ), SetOptions.merge()).addOnSuccessListener {
+                            if (action == "like") {
+                                isLikeImageView.setImageResource(R.drawable.liked)
+                            } else {
+                                isDislikeImageView.setImageResource(R.drawable.disliked)
+                            }
+                        }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e(TAG, "Erro ao atualizar status de like/dislike", e)
+                    Toast.makeText(this@SerieDetailActivity, "Erro ao atualizar status de like/dislike", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+    private suspend fun checkIfLike(serieId: Int): Boolean {
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            val favoritesRef = Firebase.firestore.collection("rating").document(user.uid)
+            return try {
+                val document = favoritesRef.get().await()
+                if (document.exists()) {
+                    val favorites = document.data ?: return false
+                    val serieData = favorites?.get(serieId.toString()) as? Map<String, Any>
+                    val serieCategory = serieData?.get("categoria") as? String
+                    val serieLike = serieData?.get("likes") as? Long ?: 0
+
+                    return serieCategory.equals("serie") && (serieLike > 0)
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Erro ao verificar likes", e)
+                false
+            }
+        }
+        return false
+    }
+
+    private suspend fun checkIfDislike(serieId: Int): Boolean {
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            val favoritesRef = Firebase.firestore.collection("rating").document(user.uid)
+            return try {
+                val document = favoritesRef.get().await()
+                if (document.exists()) {
+                    val favorites = document.data ?: return false
+                    val serieData = favorites?.get(serieId.toString()) as? Map<String, Any>
+                    val serieCategory = serieData?.get("categoria") as? String
+                    val serieDislike = serieData?.get("dislikes") as? Long ?: 0
+
+                    return serieCategory.equals("serie") && (serieDislike > 0)
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Erro ao verificar dislikes", e)
+                false
+            }
+        }
+        return false
     }
 
 }

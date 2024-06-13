@@ -19,7 +19,7 @@
             android:layout_height="184sp"
             app:shapeAppearanceOverlay="@style/roundedimageview"
             android:scaleType="centerCrop"
-            android:src="@drawable/poster"/>
+          />
 
 
         <View
@@ -44,7 +44,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:text="90%"
                 android:textColor="@android:color/white"
                 android:textSize="16dp" />
         </LinearLayout>

@@ -11,6 +11,8 @@ data class MovieDetails(
     val runtime: Int,
     val tagline: String,
     val title: String,
+    val vote_average: Double,
+    val vote_count: Int
 )
 
 data class Genre(
