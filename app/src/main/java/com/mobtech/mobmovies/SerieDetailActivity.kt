@@ -13,9 +13,11 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.mobtech.mobmovies.adapter.SerieCastAdapter
+import com.mobtech.mobmovies.adapter.CommentAdapter
 import com.mobtech.mobmovies.adapter.SerieProviderAdapter
 import com.mobtech.mobmovies.adapter.SimilarMovieAdapter
 import com.mobtech.mobmovies.adapter.SimilarSerieAdapter
@@ -55,15 +57,21 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
         binding = ActivitySerieDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        isFavoriteImageView = findViewById(R.id.is_favorite)
+
         val serieId = intent.getIntExtra("serieId", 0);
 
         val btnCommentary = findViewById<TextView>(R.id.btn_commetary)
         btnCommentary.setOnClickListener {
-            val intent = Intent(this, CommentActivity::class.java).apply {
-                putExtra("CONTENT_ID", serieId.toString())
-                putExtra("CONTENT_TYPE", "serie")
+            if (isUserLoggedIn()) {
+                val intent = Intent(this, CommentActivity::class.java).apply {
+                    putExtra("CONTENT_ID", serieId.toString())
+                    putExtra("CONTENT_TYPE", "movie")
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Você precisa estar logado para comentar.", Toast.LENGTH_SHORT).show()
             }
-            startActivity(intent)
         }
 
         if (FirebaseApp.getApps(this).isEmpty()) {
@@ -153,6 +161,11 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
                 Log.i(TAG, "onFailure: ${t.message}")
             }
         })
+
+        getComment(serieId) { comments ->
+            val commentAdapter = CommentAdapter(comments, this)
+            commentAdapter.bindView(binding.commentaryBox)
+        }
     }
 
     fun updateUI(serieDetails: SerieDetails) {
@@ -303,6 +316,30 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
             }
         }
         return false
+    }
+
+    private fun getComment(serieId: Int, callback: (List<Comment>) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("comentarios")
+            .whereEqualTo("contentId", serieId)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Log.w(TAG, "Erro ao obter comentários", exception)
+                    return@addSnapshotListener
+                }
+
+                val comments = mutableListOf<Comment>()
+                snapshot?.forEach { document ->
+                    val username = document.getString("username")
+                    val comentario = document.getString("comentario")
+                    val dataHora = document.get("data_hora")
+
+                    if (username != null && comentario != null && dataHora != null) {
+                        comments.add(Comment(username, comentario, dataHora))
+                    }
+                }
+                callback(comments)
+            }
     }
 
 }

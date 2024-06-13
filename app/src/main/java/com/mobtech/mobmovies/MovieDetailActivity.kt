@@ -63,11 +63,15 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
 
         val btnCommentary = findViewById<TextView>(R.id.btn_commetary)
         btnCommentary.setOnClickListener {
-            val intent = Intent(this, CommentActivity::class.java).apply {
-                putExtra("CONTENT_ID", movieId.toString())
-                putExtra("CONTENT_TYPE", "movie")
+            if (isUserLoggedIn()) {
+                val intent = Intent(this, CommentActivity::class.java).apply {
+                    putExtra("CONTENT_ID", movieId.toString())
+                    putExtra("CONTENT_TYPE", "movie")
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Você precisa estar logado para comentar.", Toast.LENGTH_SHORT).show()
             }
-            startActivity(intent)
         }
 
         if (FirebaseApp.getApps(this).isEmpty()) {
@@ -332,7 +336,7 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         return false
     }
 
-    fun getComment(movieId: Int, callback: (List<Comment>) -> Unit) {
+    private fun getComment(movieId: Int, callback: (List<Comment>) -> Unit) {
         val db = FirebaseFirestore.getInstance()
         db.collection("comentarios")
             .whereEqualTo("contentId", movieId)
