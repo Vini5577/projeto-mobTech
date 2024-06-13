@@ -352,6 +352,7 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
             .whereEqualTo("contentId", serieId)
             .whereEqualTo("contentType", "serie")
             .orderBy("data_hora", Query.Direction.DESCENDING)
+            .limit(2)
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
                     Log.w(TAG, "Erro ao obter comentários", exception)
@@ -379,6 +380,7 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
         }
         startActivity(intent)
     }
+
     private fun updateLikeStatus(serieId: Int, action: String) {
         val isLikeImageView = binding.isLike
         val isDislikeImageView = binding.isDislike
@@ -510,6 +512,15 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
             }
         }
         return false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val serieId = intent.getIntExtra("serieId", 0);
+        getComment(serieId) { comments ->
+            val commentAdapter = CommentAdapter(comments, this@SerieDetailActivity)
+            commentAdapter.bindView(binding.commentaryBox)
+        }
     }
 
 }

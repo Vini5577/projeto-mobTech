@@ -558,5 +558,14 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             }
             return false
         }
+
+    override fun onResume() {
+        super.onResume()
+        val movieId = intent.getIntExtra("movieId", 0);
+        getComment(movieId) { comments ->
+            val commentAdapter = CommentAdapter(comments, this@MovieDetailActivity)
+            commentAdapter.bindView(binding.commentaryBox)
+        }
+    }
 }
 

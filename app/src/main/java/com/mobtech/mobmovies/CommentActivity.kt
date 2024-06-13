@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
@@ -68,7 +69,7 @@ class CommentActivity : AppCompatActivity() {
             return
         }
 
-        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
         sdf.timeZone = TimeZone.getTimeZone("America/Sao_Paulo")
         val formattedDate = sdf.format(Date())
         val dateString = formattedDate.toString()
@@ -96,6 +97,8 @@ class CommentActivity : AppCompatActivity() {
                                     .update("commentId", documentReference.id)
 
                                 onBackPressed()
+                                Toast.makeText(this, "Comentário adicionado com sucesso!", Toast.LENGTH_SHORT)
+                                    .show()
 
                             }
                             .addOnFailureListener { e ->
