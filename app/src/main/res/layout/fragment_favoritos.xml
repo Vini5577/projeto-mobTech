@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="start"
+                android:layout_marginTop="9dp">
+
+
+                <EditText
+                    android:id="@+id/busca_favoritos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:background="@drawable/rounded_plain_text"
+                    android:inputType="text"
+                    android:layout_marginHorizontal="24dp"
+                    android:paddingVertical="16dp"
+                    android:drawableLeft="@drawable/search"
+                    android:drawablePadding="20dp"
+                    android:paddingLeft="16dp"
+                    android:textColorHint="#BBBBBB"
+                    android:hint="Busque Filmes/Series Favoritos"
+                    />
+
+                <GridLayout
+                    android:id="@+id/layout_results"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10sp"
+                    android:layout_marginBottom="10sp"
+                    android:layout_marginLeft="40sp"
+                    android:columnCount="2">
+
+                </GridLayout>
+            </LinearLayout>
+</ScrollView>
