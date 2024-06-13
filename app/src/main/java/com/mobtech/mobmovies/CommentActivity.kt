@@ -16,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 class CommentActivity : AppCompatActivity() {
 
@@ -67,8 +68,10 @@ class CommentActivity : AppCompatActivity() {
             return
         }
 
-        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        sdf.timeZone = TimeZone.getTimeZone("America/Sao_Paulo")
         val formattedDate = sdf.format(Date())
+        val dateString = formattedDate.toString()
 
         Firebase.firestore.collection("users")
             .whereEqualTo("email", userEmail)
@@ -79,19 +82,21 @@ class CommentActivity : AppCompatActivity() {
                     if (username != null) {
                         val comentariosRef = Firebase.firestore.collection("comentarios")
                         val comentarioData: Map<String, Any> = mapOf(
-                            "username" to username as String,
-                            "comentario" to commentText as String,
-                            "data_hora" to formattedDate as String,
-                            "contentId" to contentId.toInt(),
-                            "contentType" to contentType as String,
+                            "username" to username,
+                            "comentario" to commentText,
+                            "data_hora" to dateString,
+                            "contentId" to contentId,
+                            "contentType" to contentType,
                         )
 
                         comentariosRef.add(comentarioData)
                             .addOnSuccessListener { documentReference ->
                                 Log.d(TAG, "Comentário adicionado com ID: ${documentReference.id}")
-                                // Update the comment with its ID
                                 comentariosRef.document(documentReference.id)
                                     .update("commentId", documentReference.id)
+
+                                onBackPressed()
+
                             }
                             .addOnFailureListener { e ->
                                 Log.w(TAG, "Erro ao adicionar comentário", e)

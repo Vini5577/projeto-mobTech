@@ -1,6 +1,7 @@
 package com.mobtech.mobmovies.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,17 +16,17 @@ import com.mobtech.mobmovies.R
 class CommentAdapter(private val comments: List<Comment>, private val context: Context) {
 
     fun bindView(linearLayout: LinearLayout) {
-
+        linearLayout.removeAllViews();
         val inflater = LayoutInflater.from(context)
 
         for (comment in comments) {
-            val view = inflater.inflate(R.layout.commetery_card, linearLayout, false)
+            val view = inflater.inflate(R.layout.commetery_card, null)
 
             val titleTextView: TextView = view.findViewById(R.id.user)
             val dateComment: TextView = view.findViewById(R.id.date)
             val commentary: TextView = view.findViewById(R.id.commentary)
 
-
+            Log.e("TESTANDOOOOOOO", "$comment")
             titleTextView.text = comment.username
             dateComment.text = comment.data_hora.toString()
             commentary.text = comment.comentario

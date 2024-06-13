@@ -4,20 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.mobtech.mobmovies.adapter.CommentAdapter
@@ -25,22 +23,23 @@ import com.mobtech.mobmovies.adapter.MovieAdapter
 import com.mobtech.mobmovies.adapter.MovieCastAdapter
 import com.mobtech.mobmovies.adapter.MovieProviderAdapter
 import com.mobtech.mobmovies.adapter.SimilarMovieAdapter
-import com.mobtech.mobmovies.service.MovieApiService
 import com.mobtech.mobmovies.data.MovieCast
 import com.mobtech.mobmovies.data.MovieDetails
 import com.mobtech.mobmovies.data.MovieProvider
 import com.mobtech.mobmovies.data.MovieResponse
 import com.mobtech.mobmovies.databinding.ActivityMovieDetailBinding
+import com.mobtech.mobmovies.service.MovieApiService
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 
 class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListener, MovieCastAdapter.OnItemClickListener {
 
@@ -102,7 +101,11 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             override fun onResponse(call: Call<MovieCast>, response: Response<MovieCast>) {
                 if (response.isSuccessful) {
                     response.body()?.cast?.let { casts ->
-                        val adapter = MovieCastAdapter(casts, this@MovieDetailActivity, this@MovieDetailActivity)
+                        val adapter = MovieCastAdapter(
+                            casts,
+                            this@MovieDetailActivity,
+                            this@MovieDetailActivity
+                        )
                         adapter.bindView(actorList)
                     }
                 } else {
@@ -125,7 +128,8 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
 
                     movieProvider?.let { providerData ->
                         val flatRateDataList = providerData.flatrate
-                        val adapter = MovieProviderAdapter(flatRateDataList, this@MovieDetailActivity)
+                        val adapter =
+                            MovieProviderAdapter(flatRateDataList, this@MovieDetailActivity)
                         adapter.bindView(providerList)
 
                         Log.e(TAG, "Teste: $providerData")
@@ -142,11 +146,15 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
 
         val similarMovies = binding.similarMovie
 
-        api.getSimilarMovie(movieId, API_KEY, "pt-BR").enqueue(object: Callback<MovieResponse> {
+        api.getSimilarMovie(movieId, API_KEY, "pt-BR").enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { movies ->
-                        val adapter = SimilarMovieAdapter(movies, this@MovieDetailActivity, this@MovieDetailActivity)
+                        val adapter = SimilarMovieAdapter(
+                            movies,
+                            this@MovieDetailActivity,
+                            this@MovieDetailActivity
+                        )
                         adapter.bindView(similarMovies)
                     }
                 }
@@ -163,7 +171,10 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             onBackPressed()
         })
 
-        getComments(movieId)
+        getComment(movieId) { comments ->
+            val commentAdapter = CommentAdapter(comments, this)
+            commentAdapter.bindView(binding.commentaryBox)
+        }
     }
 
     private fun updateUI(movieDetails: MovieDetails?) {
@@ -183,7 +194,7 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             binding.movieTime.text = text + minutesText
             binding.movieCategories.text = genres
 
-            if(movieDetails.poster_path != null) {
+            if (movieDetails.poster_path != null) {
                 Glide.with(this)
                     .load("https://image.tmdb.org/t/p/w500${movieDetails.poster_path}")
                     .into(binding.moviePoster)
@@ -205,18 +216,22 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             }
 
             isFavoriteImageView.setOnClickListener({
-                if(isUserLoggedIn()) {
+                if (isUserLoggedIn()) {
                     lifecycleScope.launch {
                         val isFavorite: Boolean = checkIfFavorite(movieDetails.id);
 
-                        if(isFavorite) {
+                        if (isFavorite) {
                             removeFromFavorites(movieDetails.id)
                         } else {
                             addToFavorites(movieDetails.id, movieDetails)
                         }
                     }
                 } else {
-                    Toast.makeText(this@MovieDetailActivity, "Você precisa estar logado para favoritar esta série", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MovieDetailActivity,
+                        "Você precisa estar logado para favoritar esta série",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
 
@@ -258,7 +273,11 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                 }
                 .addOnFailureListener {
                     Log.e(TAG, "Falha ao adicionar série aos favoritos", it)
-                    Toast.makeText(this@MovieDetailActivity, "Erro ao favoritar a série", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MovieDetailActivity,
+                        "Erro ao favoritar a série",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
         }
     }
@@ -275,7 +294,11 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                 }
                 .addOnFailureListener {
                     Log.e(TAG, "Falha ao obter detalhes da série")
-                    Toast.makeText(this@MovieDetailActivity, "Você precisa estar logado para favoritar esta série", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MovieDetailActivity,
+                        "Você precisa estar logado para favoritar esta série",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
         }
     }
@@ -292,7 +315,10 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                     val movieData = favorites?.get(movieId.toString()) as Map<String, Any>
                     val movieCategory = movieData["categoria"] as String
 
-                    Log.e("CHECK RESPONSE", "verificando categoria: ${movieCategory.equals("movie")}")
+                    Log.e(
+                        "CHECK RESPONSE",
+                        "verificando categoria: ${movieCategory.equals("movie")}"
+                    )
 
                     return verifyId && movieCategory.equals("movie")
                 } else {
@@ -306,28 +332,28 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         return false
     }
 
-    private fun getComments(movieId: Int) {
-        val commentRef = FirebaseFirestore.getInstance().collection("comentarios")
-        val query = commentRef
+    fun getComment(movieId: Int, callback: (List<Comment>) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("comentarios")
             .whereEqualTo("contentId", movieId)
-            .whereEqualTo("contentType", "movie")
-            .orderBy("data_hora", Query.Direction.DESCENDING)
-            .limit(2)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Log.w(TAG, "Erro ao obter comentários", exception)
+                    return@addSnapshotListener
+                }
 
-        query.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.e("CHECK RESPONSE", "Não foi possível obter os comentários", e)
-                return@addSnapshotListener
-            }
+                val comments = mutableListOf<Comment>()
+                snapshot?.forEach { document ->
+                    val username = document.getString("username")
+                    val comentario = document.getString("comentario")
+                    val dataHora = document.get("data_hora")
 
-            if (snapshot != null) {
-                val commentsList = snapshot.toObjects(Comment::class.java)
-                Log.e("CHECK RESPONSE", "Comentários obtidos: $commentsList")
-               val commentaryBox = binding.commentaryBox
-                commentaryBox.removeAllViews()
-                val commentAdapter = CommentAdapter(commentsList, this)
-                commentAdapter.bindView(commentaryBox)
+                    if (username != null && comentario != null && dataHora != null) {
+                        comments.add(Comment(username, comentario, dataHora))
+                    }
+                }
+                callback(comments)
             }
-        }
     }
+
 }
