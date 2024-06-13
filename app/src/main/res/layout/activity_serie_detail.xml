@@ -417,6 +417,17 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/more_comments"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="Ler mais comentários"
+            android:textColor="@color/white"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textSize="17dp"
+            />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

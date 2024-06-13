@@ -14,6 +14,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.mobtech.mobmovies.adapter.SerieCastAdapter
@@ -66,7 +67,7 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
             if (isUserLoggedIn()) {
                 val intent = Intent(this, CommentActivity::class.java).apply {
                     putExtra("CONTENT_ID", serieId.toString())
-                    putExtra("CONTENT_TYPE", "movie")
+                    putExtra("CONTENT_TYPE", "serie")
                 }
                 startActivity(intent)
             } else {
@@ -166,6 +167,11 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
             val commentAdapter = CommentAdapter(comments, this)
             commentAdapter.bindView(binding.commentaryBox)
         }
+
+        val moreComments = binding.moreComments
+        moreComments.setOnClickListener({
+            moreComments(serieId, "serie")
+        })
     }
 
     fun updateUI(serieDetails: SerieDetails) {
@@ -322,6 +328,8 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
         val db = FirebaseFirestore.getInstance()
         db.collection("comentarios")
             .whereEqualTo("contentId", serieId)
+            .whereEqualTo("contentType", "serie")
+            .orderBy("data_hora", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
                     Log.w(TAG, "Erro ao obter comentários", exception)
@@ -340,6 +348,14 @@ class SerieDetailActivity : AppCompatActivity(), SerieCastAdapter.OnItemClickLis
                 }
                 callback(comments)
             }
+    }
+
+    private fun moreComments(serieId: Int, category: String) {
+        val intent = Intent(this, MoreCommentsActivity::class.java).apply {
+            putExtra("CONTENT_ID", serieId.toString())
+            putExtra("CONTENT_TYPE", category)
+        }
+        startActivity(intent)
     }
 
 }

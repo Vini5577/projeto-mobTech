@@ -39,7 +39,7 @@ class CommentActivity : AppCompatActivity() {
         })
 
         contentId = intent.getStringExtra("CONTENT_ID")?.toIntOrNull() ?: 0
-        contentType = intent.getStringExtra("CONTENT_TYPE") ?: "movie"
+        contentType = intent.getStringExtra("CONTENT_TYPE") ?: ""
 
         Log.d(TAG, "Content ID: $contentId, Content Type: $contentType")
 

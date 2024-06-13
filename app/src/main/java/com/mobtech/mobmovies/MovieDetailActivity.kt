@@ -15,6 +15,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
@@ -175,10 +176,17 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
             onBackPressed()
         })
 
+
         getComment(movieId) { comments ->
-            val commentAdapter = CommentAdapter(comments, this)
+            val commentAdapter = CommentAdapter(comments, this@MovieDetailActivity)
             commentAdapter.bindView(binding.commentaryBox)
         }
+
+
+        val moreComments = binding.moreComments
+        moreComments.setOnClickListener({
+            moreComments(movieId, "movie")
+        })
     }
 
     private fun updateUI(movieDetails: MovieDetails?) {
@@ -238,7 +246,6 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
                     ).show()
                 }
             })
-
         }
     }
 
@@ -340,24 +347,36 @@ class MovieDetailActivity : AppCompatActivity(), MovieAdapter.OnItemClickListene
         val db = FirebaseFirestore.getInstance()
         db.collection("comentarios")
             .whereEqualTo("contentId", movieId)
+            .whereEqualTo("contentType", "movie")
+            .orderBy("data_hora", Query.Direction.DESCENDING)
+            .limit(2)
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
                     Log.w(TAG, "Erro ao obter comentários", exception)
                     return@addSnapshotListener
                 }
 
-                val comments = mutableListOf<Comment>()
-                snapshot?.forEach { document ->
-                    val username = document.getString("username")
-                    val comentario = document.getString("comentario")
-                    val dataHora = document.get("data_hora")
+                if(snapshot != null) {
+                    val comments = mutableListOf<Comment>()
+                    snapshot?.forEach { document ->
+                        val username = document.getString("username")
+                        val comentario = document.getString("comentario")
+                        val dataHora = document.get("data_hora")
 
-                    if (username != null && comentario != null && dataHora != null) {
-                        comments.add(Comment(username, comentario, dataHora))
+                        if (username != null && comentario != null && dataHora != null) {
+                            comments.add(Comment(username, comentario, dataHora))
+                        }
                     }
+                    callback(comments)
                 }
-                callback(comments)
             }
     }
 
+    private fun moreComments(movieId: Int, category: String) {
+        val intent = Intent(this, MoreCommentsActivity::class.java).apply {
+            putExtra("CONTENT_ID", movieId.toString())
+            putExtra("CONTENT_TYPE", category)
+        }
+        startActivity(intent)
+    }
 }
